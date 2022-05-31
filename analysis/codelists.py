@@ -2,14 +2,14 @@
 methotrexate_codelist = codelist_from_csv(
     "codelists/opensafely-methotrexate-oral.csv",
     system="snomed",
-    column="id",
+    column="dmd_id",
 )
 
 # Used in Azathioprine Monitoring Rate
 azathioprine_codelist = codelist_from_csv(
     "codelists/opensafely-azathioprine-dmd.csv",
     system="snomed",
-    column="id",
+    column="dmd_id",
 )
 
 
@@ -17,5 +17,5 @@ azathioprine_codelist = codelist_from_csv(
 leflunomide_codelist = codelist_from_csv(
     "codelists/opensafely-leflunomide-dmd.csv",
     system="snomed",
-    column="id",
+    column="dmd_id",
 )
