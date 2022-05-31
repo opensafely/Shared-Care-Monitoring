@@ -100,6 +100,7 @@ study = StudyDefinition(
         }
     ),
     
+    ### MEDICATION ISSUES
     methotrexate_3months=patients.with_these_medications(
         codelist=methotrexate_codelist,
         find_last_match_in_period=True,
@@ -121,4 +122,33 @@ study = StudyDefinition(
         between=["index_date - 3 months", "index_date"]
     ),
     
+    ### MONITORING PARAMETERS
+    full_blood_count=patients.with_these_clinical_events(
+        codelist=full_blood_count_codelist,
+        find_last_match_in_period=True,
+        returning="binary_flag",
+        between=["index_date - 3 months", "index_date"],
+    ),
+    
+    liver_function_test=patients.with_these_clinical_events(
+        codelist=liver_function_test_codelist,
+        find_last_match_in_period=True,
+        returning="binary_flag",
+        between=["index_date - 3 months", "index_date"],
+    ),
+    
+    urea_electroyte_test=patients.with_these_clinical_events(
+        codelist=urea_electrolyte_test_codelist,
+        find_last_match_in_period=True,
+        returning="binary_flag",
+        between=["index_date - 3 months", "index_date"],
+    ),
+    
+    blood_pressure_test=patients.with_these_clinical_events(
+        codelist=blood_pressure_codelist,
+        find_last_match_in_period=True,
+        returning="binary_flag",
+        between=["index_date - 3 months", "index_date"],
+    ),
+   
 )
