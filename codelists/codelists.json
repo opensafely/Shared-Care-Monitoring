@@ -1,3 +1,22 @@
 {
-  "files": {}
+  "files": {
+    "opensafely-methotrexate-oral.csv": {
+      "id": "opensafely/methotrexate-oral/041a8320",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/methotrexate-oral/041a8320/",
+      "downloaded_at": "2022-05-31 13:58:33.475295Z",
+      "sha": "68754de9916bb08a1ea9d6d84c899dda5ee64ad7"
+    },
+    "opensafely-azathioprine-dmd.csv": {
+      "id": "opensafely/azathioprine-dmd/78f0ddfe",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/azathioprine-dmd/78f0ddfe/",
+      "downloaded_at": "2022-05-31 13:58:33.598217Z",
+      "sha": "f6fa74e1b390e9c0735d523e68873146c19e7f39"
+    },
+    "opensafely-leflunomide-dmd.csv": {
+      "id": "opensafely/leflunomide-dmd/1765d120",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/leflunomide-dmd/1765d120/",
+      "downloaded_at": "2022-05-31 13:58:33.991826Z",
+      "sha": "0d88edfe37ebb951a6ccc6199ef360c91b188c11"
+    }
+  }
 }
