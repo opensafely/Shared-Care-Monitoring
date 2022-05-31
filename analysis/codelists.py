@@ -1,3 +1,7 @@
+from cohortextractor import (
+    codelist_from_csv,
+)
+
 # Used in Methotrexate Monitoring Rate
 methotrexate_codelist = codelist_from_csv(
     "codelists/opensafely-methotrexate-oral.csv",
