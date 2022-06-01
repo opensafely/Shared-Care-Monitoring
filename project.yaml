@@ -11,7 +11,6 @@ actions:
       highly_sensitive:
         cohort: output/input.csv
         
-    
     generate_study_population_2:
         run: cohortextractor generate_cohort --index-date-range "2019-09-01 to 2021-09-01 by month" --output-format=csv.gz
         outputs:
