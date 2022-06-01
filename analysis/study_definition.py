@@ -156,7 +156,7 @@ study = StudyDefinition(
    
     indicator_overall_monitoring_overdue_numerator=patients.satisfying(
         """
-        methotrexate_3_months AND
+        methotrexate_3months AND
         (
             NOT full_blood_count OR
             NOT liver_function_test OR
