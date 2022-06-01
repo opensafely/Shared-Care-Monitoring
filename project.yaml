@@ -15,4 +15,4 @@ actions:
      run: cohortextractor:latest generate_cohort --index-date-range "2019-09-01 to 2021-09-01 by month" --output-format=csv.gz
      outputs:
        highly_sensitive:
-         cohort: output/input.csv
+         cohort: output/input_*.csv
