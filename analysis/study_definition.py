@@ -5,6 +5,7 @@ from cohortextractor import (
     combine_codelists,
     filter_codes_by_category,
     patients,
+    Measure
 )
 
 from codelists import *
@@ -19,6 +20,7 @@ study = StudyDefinition(
         "rate": "uniform",
         "incidence": 0.5,
     },
+    
     population=patients.satisfying(
         """
        registered AND
@@ -32,6 +34,7 @@ study = StudyDefinition(
        )
        """
     ),
+    
     registered=patients.registered_as_of("index_date"),
     died=patients.died_from_any_cause(
         on_or_before="index_date",
@@ -151,4 +154,26 @@ study = StudyDefinition(
     #    between=["index_date - 3 months", "index_date"],
     #),
    
+    indicator_overall_monitoring_overdue_numerator=patients.satisfying(
+        """
+        methotrexate_3_months AND
+        (
+            NOT full_blood_count OR
+            NOT liver_function_test OR
+            NOT urea_electroyte_test
+        )
+        """,
+    ),
 )
+
+
+measures = [
+    Measure(
+        id="overall_monitoring",
+        numerator="indicator_overall_monitoring_overdue_numerator",
+        denominator="population",
+        group_by="practice",
+    ),
+    
+    
+]
