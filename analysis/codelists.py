@@ -2,45 +2,51 @@ from cohortextractor import (
     codelist_from_csv,
 )
 
-# Used in Methotrexate Monitoring Rate
+# Methotrexate Monitoring Rate
 methotrexate_codelist = codelist_from_csv(
     "codelists/opensafely-methotrexate-oral.csv",
     system="snomed",
     column="dmd_id",
 )
 
-# Used in Azathioprine Monitoring Rate
+# Azathioprine Monitoring Rate
 azathioprine_codelist = codelist_from_csv(
     "codelists/opensafely-azathioprine-dmd.csv",
     system="snomed",
     column="dmd_id",
 )
 
-# Used in Leflunomide Monitoring Rate
+# Leflunomide Monitoring Rate
 leflunomide_codelist = codelist_from_csv(
     "codelists/opensafely-leflunomide-dmd.csv",
     system="snomed",
     column="dmd_id",
 )
 
-# Used in FBC Monitoring Rate
+# FBC Monitoring
 full_blood_count_codelist = codelist_from_csv(
     "codelists/user-Andrew-fbc-check-represented-by-total-white-cell-count.csv",
     system="snomed",
     column="code",
 )
 
-# Used in LFT Monitoring Rate
+# LFT Monitoring
 liver_function_test_codelist = codelist_from_csv(
     "codelists/user-Andrew-lft-check-represented-by-serum-bilirubin-level.csv",
     system="snomed",
     column="code",
 )
 
-# Used in U&E Monitoring Rate
+# U&E Monitoring
 urea_electrolyte_test_codelist = codelist_from_csv(
     "codelists/user-Andrew-ue-check-represented-by-serum-creatinine-level.csv",
     system="snomed",
     column="code",
 )
 
+# BP Monitoring - used in relation to Leflunomide Monitoring
+blood_pressure_test_codelist = codelist_from_csv(
+    "codelists/opensafely-systolic-blood-pressure-qof.csv",
+    system="snomed",
+    column="code",
+)

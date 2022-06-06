@@ -146,7 +146,7 @@ study = StudyDefinition(
     ),
     
     #blood_pressure_test=patients.with_these_clinical_events(
-    #    codelist=blood_pressure_codelist,
+    #    codelist=blood_pressure_test_codelist,
     #    find_last_match_in_period=True,
     #    returning="binary_flag",
     #    between=["index_date - 3 months", "index_date"],
