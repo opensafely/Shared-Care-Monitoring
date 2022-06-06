@@ -124,28 +124,28 @@ study = StudyDefinition(
     ),
     
     ### MONITORING PARAMETERS
-    full_blood_count=patients.with_these_clinical_events(
+    full_blood_count_3months=patients.with_these_clinical_events(
         codelist=full_blood_count_codelist,
         find_last_match_in_period=True,
         returning="binary_flag",
         between=["index_date - 3 months", "index_date"],
     ),
     
-    liver_function_test=patients.with_these_clinical_events(
+    liver_function_test_3months=patients.with_these_clinical_events(
         codelist=liver_function_test_codelist,
         find_last_match_in_period=True,
         returning="binary_flag",
         between=["index_date - 3 months", "index_date"],
     ),
     
-    urea_electroyte_test=patients.with_these_clinical_events(
+    urea_electrolyte_test_3months=patients.with_these_clinical_events(
         codelist=urea_electrolyte_test_codelist,
         find_last_match_in_period=True,
         returning="binary_flag",
         between=["index_date - 3 months", "index_date"],
     ),
     
-    blood_pressure_test=patients.with_these_clinical_events(
+    blood_pressure_test_3months=patients.with_these_clinical_events(
         codelist=blood_pressure_test_codelist,
         find_last_match_in_period=True,
         returning="binary_flag",
@@ -163,9 +163,9 @@ study = StudyDefinition(
         )
         AND
         (
-            NOT full_blood_count OR
-            NOT liver_function_test OR
-            NOT urea_electroyte_test
+            NOT full_blood_count_3months OR
+            NOT liver_function_test_3months OR
+            NOT urea_electrolyte_test_3months
         )
         """,
     ),
@@ -175,7 +175,7 @@ study = StudyDefinition(
     #    AND
     #    (
     #    IF leflunomide_3months 
-    #    NOT blood_pressure_test
+    #    NOT blood_pressure_test_3months
    
             
     
@@ -183,13 +183,12 @@ study = StudyDefinition(
         """
         methotrexate_3months AND
         (
-            NOT full_blood_count OR
-            NOT liver_function_test OR
-            NOT urea_electroyte_test
+            NOT full_blood_count_3months OR
+            NOT liver_function_test_3months OR
+            NOT urea_electrolyte_test_3months
         )
         """,
     ),
-    
     
     met_overdue_monitoring_den=patients.satisfying(
         """
@@ -202,14 +201,13 @@ study = StudyDefinition(
         """
         leflunomide_3months AND
         (
-            NOT full_blood_count OR
-            NOT liver_function_test OR
-            NOT urea_electroyte_test OR
-            NOT blood_pressure_test
+            NOT full_blood_count_3months OR
+            NOT liver_function_test_3months OR
+            NOT urea_electrolyte_test_3months OR
+            NOT blood_pressure_test_3months
         )
         """,
     ),
-    
     
     lef_overdue_monitoring_den=patients.satisfying(
         """
@@ -222,24 +220,44 @@ study = StudyDefinition(
         """
         azathioprine_3months AND
         (
-            NOT full_blood_count OR
-            NOT liver_function_test OR
-            NOT urea_electroyte_test
+            NOT full_blood_count_3months OR
+            NOT liver_function_test_3months OR
+            NOT urea_electrolyte_test_3months
         )
         """,
     ),
-    
     
     aza_overdue_monitoring_den=patients.satisfying(
         """
         azathioprine_3months
         """,
-    ),   
+    ),
+    
+    
+    fbc_overdue_num=patients.satisfying(
+        """
+        (NOT full_blood_count_3months)
+        """,
+    ),
+    
+    lft_overdue_num=patients.satisfying(
+        """
+        (NOT liver_function_test_3months)
+        """,
+    ),
+    
+    u_e_overdue_num=patients.satisfying(
+        """
+        (NOT urea_electrolyte_test_3months)
+        """,
+    ),
 )
 
 
 ### MEASURES
 measures = [
+   
+    #OVERALL
     Measure(
         id="all_sc_overdue_monitoring",
         numerator="all_sc_overdue_monitoring_num",
@@ -247,6 +265,7 @@ measures = [
         group_by="practice",
     ),
     
+    #DRUG BREAKDOWN
     Measure(
         id="met_overdue_monitoring",
         numerator="met_overdue_monitoring_num",
@@ -263,6 +282,25 @@ measures = [
         id="aza_overdue_monitoring",
         numerator="aza_overdue_monitoring_num",
         denominator="aza_overdue_monitoring_den",
+    ),
+    
+    #TEST BREAKDOWN
+    Measure(
+        id="fbc_overdue",
+        numerator="fbc_overdue_num",
+        denominator="population",
+    ),
+    
+    Measure(
+        id="lft_overdue",
+        numerator="lft_overdue_num",
+        denominator="population",
+    ),
+    
+    Measure(
+        id="u_e_overdue",
+        numerator="u_e_overdue_num",
+        denominator="population",
     ),
     
 ]
