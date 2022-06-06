@@ -152,7 +152,34 @@ study = StudyDefinition(
     #    between=["index_date - 3 months", "index_date"],
     #),
    
-    indicator_overall_monitoring_overdue_numerator=patients.satisfying(
+    
+    ### NUMERATOR & DENOMINATOR DEFINITIONS
+    all_sc_overdue_monitoring_num=patients.satisfying(
+        """
+        (
+            methotrexate_3months OR
+            leflunomide_3months OR
+            azathioprine_3months
+        )
+        AND
+        (
+            NOT full_blood_count OR
+            NOT liver_function_test OR
+            NOT urea_electroyte_test
+        )
+        """,
+    ),
+   
+    #first criteria is just the population to maybe don't need it at all?
+    
+    #    AND
+    #    (
+    #    IF leflunomide_3months 
+    #    NOT blood_pressure_test
+   
+            
+    
+    met_overdue_monitoring_num=patients.satisfying(
         """
         methotrexate_3months AND
         (
@@ -162,16 +189,80 @@ study = StudyDefinition(
         )
         """,
     ),
+    
+    
+    met_overdue_monitoring_den=patients.satisfying(
+        """
+        methotrexate_3months
+        """,
+    ),
+    
+    
+    lef_overdue_monitoring_num=patients.satisfying(
+        """
+        leflunomide_3months AND
+        (
+            NOT full_blood_count OR
+            NOT liver_function_test OR
+            NOT urea_electroyte_test OR
+            NOT blood_pressure_test
+        )
+        """,
+    ),
+    
+    
+    lef_overdue_monitoring_den=patients.satisfying(
+        """
+        leflunomide_3months
+        """,
+    ),
+    
+    
+    aza_overdue_monitoring_num=patients.satisfying(
+        """
+        azathioprine_3months AND
+        (
+            NOT full_blood_count OR
+            NOT liver_function_test OR
+            NOT urea_electroyte_test
+        )
+        """,
+    ),
+    
+    
+    aza_overdue_monitoring_den=patients.satisfying(
+        """
+        azathioprine_3months
+        """,
+    ),   
 )
 
 
+### MEASURES
 measures = [
     Measure(
-        id="overall_monitoring",
-        numerator="indicator_overall_monitoring_overdue_numerator",
+        id="all_sc_overdue_monitoring",
+        numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="practice",
     ),
     
+    Measure(
+        id="met_overdue_monitoring",
+        numerator="met_overdue_monitoring_num",
+        denominator="met_overdue_monitoring_den",
+    ),
+    
+    Measure(
+        id="lef_overdue_monitoring",
+        numerator="lef_overdue_monitoring_num",
+        denominator="lef_overdue_monitoring_den",
+    ),
+    
+    Measure(
+        id="aza_overdue_monitoring",
+        numerator="aza_overdue_monitoring_num",
+        denominator="aza_overdue_monitoring_den",
+    ),
     
 ]

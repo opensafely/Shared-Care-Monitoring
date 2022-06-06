@@ -16,7 +16,6 @@ azathioprine_codelist = codelist_from_csv(
     column="dmd_id",
 )
 
-
 # Used in Leflunomide Monitoring Rate
 leflunomide_codelist = codelist_from_csv(
     "codelists/opensafely-leflunomide-dmd.csv",
