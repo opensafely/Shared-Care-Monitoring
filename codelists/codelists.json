@@ -35,6 +35,12 @@
       "url": "https://codelists.opensafely.org/codelist/user/Andrew/ue-check-represented-by-serum-creatinine-level/75c3c92f/",
       "downloaded_at": "2022-05-31 23:36:29.089974Z",
       "sha": "4d21ba23fe3862242be9f2eb2e538a89ae851c00"
+    },
+    "opensafely-systolic-blood-pressure-qof.csv": {
+      "id": "opensafely/systolic-blood-pressure-qof/3572b5fb",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/systolic-blood-pressure-qof/3572b5fb/",
+      "downloaded_at": "2022-06-06 12:16:16.234822Z",
+      "sha": "f2bc461e351499f4e5573a6f94e760b99979491e"
     }
   }
 }
