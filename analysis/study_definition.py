@@ -157,26 +157,32 @@ study = StudyDefinition(
     all_sc_overdue_monitoring_num=patients.satisfying(
         """
         (
-            methotrexate_3months OR
-            leflunomide_3months OR
-            azathioprine_3months
+            (
+                methotrexate_3months OR
+                azathioprine_3months
+            )
+            AND
+            (
+                NOT full_blood_count_3months OR
+                NOT liver_function_test_3months OR
+                NOT urea_electrolyte_test_3months
+            )
         )
-        AND
+        OR
         (
-            NOT full_blood_count_3months OR
-            NOT liver_function_test_3months OR
-            NOT urea_electrolyte_test_3months
+            (
+                leflunomide_3months
+            )
+            AND
+            (
+                NOT full_blood_count_3months OR
+                NOT liver_function_test_3months OR
+                NOT urea_electrolyte_test_3months OR
+                NOT blood_pressure_test_3months
+            )
         )
         """,
     ),
-   
-    #first criteria is just the population to maybe don't need it at all?
-    
-    #    AND
-    #    (
-    #    IF leflunomide_3months 
-    #    NOT blood_pressure_test_3months
-   
             
     
     met_overdue_monitoring_num=patients.satisfying(
@@ -187,12 +193,6 @@ study = StudyDefinition(
             NOT liver_function_test_3months OR
             NOT urea_electrolyte_test_3months
         )
-        """,
-    ),
-    
-    met_overdue_monitoring_den=patients.satisfying(
-        """
-        methotrexate_3months
         """,
     ),
     
@@ -209,12 +209,6 @@ study = StudyDefinition(
         """,
     ),
     
-    lef_overdue_monitoring_den=patients.satisfying(
-        """
-        leflunomide_3months
-        """,
-    ),
-    
     
     aza_overdue_monitoring_num=patients.satisfying(
         """
@@ -224,12 +218,6 @@ study = StudyDefinition(
             NOT liver_function_test_3months OR
             NOT urea_electrolyte_test_3months
         )
-        """,
-    ),
-    
-    aza_overdue_monitoring_den=patients.satisfying(
-        """
-        azathioprine_3months
         """,
     ),
     
@@ -269,19 +257,19 @@ measures = [
     Measure(
         id="met_overdue_monitoring",
         numerator="met_overdue_monitoring_num",
-        denominator="met_overdue_monitoring_den",
+        denominator="methotrexate_3months",
     ),
     
     Measure(
         id="lef_overdue_monitoring",
         numerator="lef_overdue_monitoring_num",
-        denominator="lef_overdue_monitoring_den",
+        denominator="leflunomide_3months",
     ),
     
     Measure(
         id="aza_overdue_monitoring",
         numerator="aza_overdue_monitoring_num",
-        denominator="aza_overdue_monitoring_den",
+        denominator="azathioprine_3months",
     ),
     
     #TEST BREAKDOWN
