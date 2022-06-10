@@ -101,6 +101,13 @@ study = StudyDefinition(
         }
     ),
     
+    care_home_resident=patients.with_these_clinical_events(
+        codelist=care_home_codelist,
+        find_last_match_in_period=True,
+        returning="binary_flag",
+    ),
+
+    
     ### MEDICATION ISSUES
     methotrexate_3months=patients.with_these_medications(
         codelist=methotrexate_codelist,

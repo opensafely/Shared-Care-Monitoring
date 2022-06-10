@@ -50,3 +50,10 @@ blood_pressure_test_codelist = codelist_from_csv(
     system="snomed",
     column="code",
 )
+
+# Care Home Resident Status
+care_home_codelist = codelist_from_csv(
+    "codelists/opensafely-nhs-england-care-homes-residential-status.csv",
+    system="snomed",
+    column="code",
+)

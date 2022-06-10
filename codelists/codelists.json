@@ -41,6 +41,12 @@
       "url": "https://codelists.opensafely.org/codelist/opensafely/systolic-blood-pressure-qof/3572b5fb/",
       "downloaded_at": "2022-06-06 12:16:16.234822Z",
       "sha": "f2bc461e351499f4e5573a6f94e760b99979491e"
+    },
+    "opensafely-nhs-england-care-homes-residential-status.csv": {
+      "id": "opensafely/nhs-england-care-homes-residential-status/3712ef13",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/nhs-england-care-homes-residential-status/3712ef13/",
+      "downloaded_at": "2022-06-10 18:13:34.673901Z",
+      "sha": "357b2af4841e574f7d43bfeff143b39cdfed6997"
     }
   }
 }
