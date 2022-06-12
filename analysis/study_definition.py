@@ -139,13 +139,6 @@ study = StudyDefinition(
         returning="binary_flag",
     ),
     
-    
-    practice_population=patients.satisfying(
-        """
-        age <=120 AND
-        registered
-        """
-    ),
 
     
     ### MEDICATION ISSUES
