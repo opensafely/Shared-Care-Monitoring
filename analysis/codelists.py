@@ -57,3 +57,11 @@ care_home_codelist = codelist_from_csv(
     system="snomed",
     column="code",
 )
+
+# Ethnicity - 6 Grouping
+ethnicity_codes = codelist_from_csv(
+    "codelists/opensafely-ethnicity.csv",
+    system="ctv3",
+    column="Code",
+    category_column="Grouping_6",
+)

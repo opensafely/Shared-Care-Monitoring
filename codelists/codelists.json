@@ -47,6 +47,12 @@
       "url": "https://codelists.opensafely.org/codelist/opensafely/nhs-england-care-homes-residential-status/3712ef13/",
       "downloaded_at": "2022-06-10 18:13:34.673901Z",
       "sha": "357b2af4841e574f7d43bfeff143b39cdfed6997"
+    },
+    "opensafely-ethnicity.csv": {
+      "id": "opensafely/ethnicity/2020-04-27",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/ethnicity/2020-04-27/",
+      "downloaded_at": "2022-06-12 09:43:24.530144Z",
+      "sha": "3d2f3998b71863a80b24d60f6f4282e14191ae13"
     }
   }
 }

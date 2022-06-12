@@ -6,3 +6,4 @@ user/Andrew/lft-check-represented-by-serum-bilirubin-level/0ed33c65/
 user/Andrew/ue-check-represented-by-serum-creatinine-level/75c3c92f/
 opensafely/systolic-blood-pressure-qof/3572b5fb/
 opensafely/nhs-england-care-homes-residential-status/3712ef13/
+opensafely/ethnicity/2020-04-27/
