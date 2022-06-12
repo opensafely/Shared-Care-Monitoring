@@ -139,7 +139,6 @@ study = StudyDefinition(
         returning="binary_flag",
     ),
     
-    
 
     imd=patients.categorised_as(
         {
@@ -169,11 +168,6 @@ study = StudyDefinition(
             },
         },
     ),
-    
-
-    
-
-    
 
     
     ### MEDICATION ISSUES
