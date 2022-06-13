@@ -42,6 +42,9 @@ study = StudyDefinition(
         return_expectations={"incidence": 0.1},
     ),
     
+    ### DEMOGRAPHICS ----
+    
+    # GP Practice
     practice=patients.registered_practice_as_of(
         "index_date",
         returning="pseudo_id",
@@ -50,9 +53,8 @@ study = StudyDefinition(
             "incidence": 0.5,
         },
     ),
-    
 
-    
+    # Age
     age=patients.age_as_of(
         "index_date",
         return_expectations={
@@ -89,8 +91,30 @@ study = StudyDefinition(
         },
     ),
     
+    # Region
+    region = patients.registered_practice_as_of(
+        "index_date",
+        returning = "nuts1_region_name",
+        return_expectations = {
+          "rate": "universal",
+          "category": {
+            "ratios": {
+              "North East": 0.1,
+              "North West": 0.1,
+              "Yorkshire and The Humber": 0.1,
+              "East Midlands": 0.1,
+              "West Midlands": 0.1,
+              "East": 0.1,
+              "London": 0.2,
+              "South East": 0.1,
+              "South West": 0.1,
+            },
+          },
+        },
+    ),
     
-     ethnicity = patients.categorised_as(
+    # Ethnicity
+    ethnicity = patients.categorised_as(
             {"Missing": "DEFAULT",
             "White": "eth='1' OR (NOT eth AND ethnicity_sus='1')", 
             "Mixed": "eth='2' OR (NOT eth AND ethnicity_sus='2')", 
@@ -124,7 +148,7 @@ study = StudyDefinition(
             ),
     ),
     
-    
+    # Sex
     sex=patients.sex(
         return_expectations={
             "rate": "universal",
@@ -132,14 +156,42 @@ study = StudyDefinition(
         }
     ),
     
-         
+    # Care Home Resident
     care_home_resident=patients.with_these_clinical_events(
         codelist=care_home_codelist,
         find_last_match_in_period=True,
         returning="binary_flag",
     ),
     
+    # Housebound
+    housebound_opensafely = patients.satisfying(
+    """housebound_date
+                AND NOT no_longer_housebound
+                AND NOT moved_into_care_home""",
+    return_expectations={
+      "incidence": 0.01,
+    },
+    
+        housebound_date = patients.with_these_clinical_events( 
+            codelist = housebound_opensafely_snomed_codes, 
+            on_or_before = "index_date",
+            find_last_match_in_period = True,
+            returning = "date",
+            date_format = "YYYY-MM-DD",
+        ),   
 
+        no_longer_housebound = patients.with_these_clinical_events( 
+            codelist = no_longer_housebound_opensafely_snomed_codes, 
+            on_or_after = "housebound_date",
+        ),
+
+        moved_into_care_home = patients.with_these_clinical_events(
+            codelist = care_home_codelist,
+            on_or_after = "housebound_date",
+        ),
+    ),
+    
+    # Index of Multiple Deprivation
     imd=patients.categorised_as(
         {
             "0": "DEFAULT",
@@ -168,9 +220,60 @@ study = StudyDefinition(
             },
         },
     ),
-
     
-    ### MEDICATION ISSUES
+    # Rurality Classification
+    rural_urban = patients.address_as_of(
+        "index_date",
+        returning = "rural_urban_classification",
+        return_expectations = {
+            "rate": "universal",
+            "category": {"ratios": {1: 0.125, 2: 0.125, 3: 0.125, 4: 0.125, 5: 0.125, 6: 0.125, 7: 0.125, 8: 0.125}},
+            "incidence": 1,
+        },
+    ),
+    
+    
+    ### CLINICAL COVARIATES ----
+    
+    # Dementia
+    dementia_nhsd = patients.satisfying(
+        """
+        dementia_all
+        AND
+        age > 39
+        """, 
+    return_expectations = {
+      "incidence": 0.01,
+    },
+        
+        dementia_all = patients.with_these_clinical_events(
+            dementia_nhsd_snomed_codes,
+            on_or_before = "index_date",
+            returning = "binary_flag",
+            return_expectations = {"incidence": 0.05}
+        ),
+    ),
+    
+    # Learning Disability
+    learning_disability_primis = patients.with_these_clinical_events(
+        wider_ld_primis_snomed_codes,
+        on_or_before = "index_date",
+        returning = "binary_flag",
+        return_expectations = {"incidence": 0.2}
+    ),
+    
+    # Serious Mental Illness
+    serious_mental_illness = patients.with_these_clinical_events(
+        serious_mental_illness_codes,
+        on_or_before = "index_date",
+        returning = "binary_flag",
+        return_expectations = {"incidence": 0.1}
+    ),
+    
+    
+    ### MEDICATION ISSUES ----
+    
+    # Methotrexate
     methotrexate_3months=patients.with_these_medications(
         codelist=methotrexate_codelist,
         find_last_match_in_period=True,
@@ -178,6 +281,7 @@ study = StudyDefinition(
         between=["index_date - 3 months", "index_date"]
     ),
     
+    # Leflunomide
     leflunomide_3months=patients.with_these_medications(
         codelist=leflunomide_codelist,
         find_last_match_in_period=True,
@@ -185,6 +289,7 @@ study = StudyDefinition(
         between=["index_date - 3 months", "index_date"]
     ),
     
+    # Azathioprine
     azathioprine_3months=patients.with_these_medications(
         codelist=azathioprine_codelist,
         find_last_match_in_period=True,
@@ -192,7 +297,10 @@ study = StudyDefinition(
         between=["index_date - 3 months", "index_date"]
     ),
     
-    ### MONITORING PARAMETERS
+    
+    ### MONITORING PARAMETERS ----
+    
+    # Full Blood Count
     full_blood_count_3months=patients.with_these_clinical_events(
         codelist=full_blood_count_codelist,
         find_last_match_in_period=True,
@@ -200,6 +308,7 @@ study = StudyDefinition(
         between=["index_date - 3 months", "index_date"],
     ),
     
+    # Liver Function Test
     liver_function_test_3months=patients.with_these_clinical_events(
         codelist=liver_function_test_codelist,
         find_last_match_in_period=True,
@@ -207,6 +316,7 @@ study = StudyDefinition(
         between=["index_date - 3 months", "index_date"],
     ),
     
+    # Urea & Electrolyte Test
     urea_electrolyte_test_3months=patients.with_these_clinical_events(
         codelist=urea_electrolyte_test_codelist,
         find_last_match_in_period=True,
@@ -214,6 +324,7 @@ study = StudyDefinition(
         between=["index_date - 3 months", "index_date"],
     ),
     
+    #Blood Pressure Test
     blood_pressure_test_3months=patients.with_these_clinical_events(
         codelist=blood_pressure_test_codelist,
         find_last_match_in_period=True,
@@ -222,7 +333,9 @@ study = StudyDefinition(
     ),
    
     
-    ### NUMERATOR & DENOMINATOR DEFINITIONS
+    ### NUMERATOR DEFINITIONS ----
+    
+    # All Medicines Overdue Any Monitoring
     all_sc_overdue_monitoring_num=patients.satisfying(
         """
         (
@@ -253,7 +366,7 @@ study = StudyDefinition(
         """,
     ),
             
-    
+    # On Methotrexate Overdue Any Monitoring
     met_overdue_monitoring_num=patients.satisfying(
         """
         methotrexate_3months AND
@@ -265,7 +378,7 @@ study = StudyDefinition(
         """,
     ),
     
-    
+    # On Leflunomide Overdue Any Monitoring
     lef_overdue_monitoring_num=patients.satisfying(
         """
         leflunomide_3months AND
@@ -278,7 +391,7 @@ study = StudyDefinition(
         """,
     ),
     
-    
+    # On Azathioprine Overdue Any Monitoring
     aza_overdue_monitoring_num=patients.satisfying(
         """
         azathioprine_3months AND
@@ -290,28 +403,38 @@ study = StudyDefinition(
         """,
     ),
     
-    
+    # No Full Blood Count within 3 months
     fbc_overdue_num=patients.satisfying(
         """
         (NOT full_blood_count_3months)
         """,
     ),
     
+    # No Liver Function Test within 3 months
     lft_overdue_num=patients.satisfying(
         """
         (NOT liver_function_test_3months)
         """,
     ),
     
+    # No Urea & Electrolyte Test within 3 months
     u_e_overdue_num=patients.satisfying(
         """
         (NOT urea_electrolyte_test_3months)
         """,
     ),
+    
+    # No Blood Pressure Test within 3 months - only relevant to Leflunomide
+    bp_overdue_num=patients.satisfying(
+        """
+        leflunomide_3months AND
+        NOT blood_pressure_test_3months
+        """,
+    ),
 )
 
 
-### MEASURES
+### MEASURES ----
 measures = [
    
     #OVERALL
@@ -341,7 +464,7 @@ measures = [
         denominator="azathioprine_3months",
     ),
     
-    #TEST BREAKDOWN
+    #MONITORING PARAMETER BREAKDOWN
     Measure(
         id="fbc_overdue",
         numerator="fbc_overdue_num",
@@ -358,6 +481,12 @@ measures = [
         id="u_e_overdue",
         numerator="u_e_overdue_num",
         denominator="population",
+    ),
+    
+    Measure(
+        id="bp_overdue",
+        numerator="bp_overdue_num",
+        denominator="leflunomide_3months",
     ),
     
 ]
