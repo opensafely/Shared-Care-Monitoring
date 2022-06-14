@@ -95,8 +95,8 @@ no_longer_housebound_opensafely_snomed_codes = codelist_from_csv(
 )
 
 # Learning disabilities
-wider_ld_primis_snomed_codes = codelist_from_csv(
-    "codelists/primis-covid19-vacc-uptake-learndis.csv", 
+learning_disability_codes = codelist_from_csv(
+    "codelists/nhsd-primary-care-domain-refsets-ld_cod.csv", 
     system = "snomed", 
     column = "code"
 )

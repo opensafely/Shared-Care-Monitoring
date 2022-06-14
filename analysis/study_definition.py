@@ -25,7 +25,7 @@ study = StudyDefinition(
         """
        registered AND
        NOT died AND
-       (age >=18 AND age <=120) AND 
+       (age_band != "missing") AND 
        (sex = 'M' OR sex = 'F') AND
        (
         (methotrexate_3months) OR
@@ -54,15 +54,7 @@ study = StudyDefinition(
         },
     ),
 
-    # Age
-    age=patients.age_as_of(
-        "index_date",
-        return_expectations={
-            "rate": "universal",
-            "int": {"distribution": "population_ages"},
-        },
-    ),
-    
+    # Age Band
     age_band=patients.categorised_as(
         {
             "missing": "DEFAULT",
@@ -89,6 +81,14 @@ study = StudyDefinition(
                 }
             },
         },
+    
+        age=patients.age_as_of(
+            "index_date",
+            return_expectations={
+                "rate": "universal",
+                "int": {"distribution": "population_ages"},
+            },
+        ),
     ),
     
     # Region
@@ -182,26 +182,26 @@ study = StudyDefinition(
 
         no_longer_housebound = patients.with_these_clinical_events( 
             codelist = no_longer_housebound_opensafely_snomed_codes, 
-            on_or_after = "housebound_date",
+            between=["housebound_date", "index_date - 3 months"]
         ),
 
         moved_into_care_home = patients.with_these_clinical_events(
             codelist = care_home_codelist,
-            on_or_after = "housebound_date",
+            between=["housebound_date", "index_date - 3 months"]
         ),
     ),
     
-    # Index of Multiple Deprivation
-    imd=patients.categorised_as(
+   # Index of Multiple Deprivation Quintile
+    imdQ5=patients.categorised_as(
         {
             "0": "DEFAULT",
-            "1": """index_of_multiple_deprivation >=1 AND index_of_multiple_deprivation < 32844*1/5""",
-            "2": """index_of_multiple_deprivation >= 32844*1/5 AND index_of_multiple_deprivation < 32844*2/5""",
-            "3": """index_of_multiple_deprivation >= 32844*2/5 AND index_of_multiple_deprivation < 32844*3/5""",
-            "4": """index_of_multiple_deprivation >= 32844*3/5 AND index_of_multiple_deprivation < 32844*4/5""",
-            "5": """index_of_multiple_deprivation >= 32844*4/5 AND index_of_multiple_deprivation < 32844""",
+            "1": "imd >= 0 AND imd < 32800*1/5",
+            "2": "imd >= 32800*1/5 AND imd < 32800*2/5",
+            "3": "imd >= 32800*2/5 AND imd < 32800*3/5",
+            "4": "imd >= 32800*3/5 AND imd < 32800*4/5",
+            "5": "imd >= 32800*4/5 AND imd <= 32800",
         },
-        index_of_multiple_deprivation=patients.address_as_of(
+        imd=patients.address_as_of(
             "index_date",
             returning="index_of_multiple_deprivation",
             round_to_nearest=100,
@@ -220,7 +220,7 @@ study = StudyDefinition(
             },
         },
     ),
-    
+
     # Rurality Classification
     rural_urban = patients.address_as_of(
         "index_date",
@@ -255,8 +255,8 @@ study = StudyDefinition(
     ),
     
     # Learning Disability
-    learning_disability_primis = patients.with_these_clinical_events(
-        wider_ld_primis_snomed_codes,
+    learning_disability = patients.with_these_clinical_events(
+        learning_disability_codes,
         on_or_before = "index_date",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.2}
@@ -334,37 +334,6 @@ study = StudyDefinition(
    
     
     ### NUMERATOR DEFINITIONS ----
-    
-    # All Medicines Overdue Any Monitoring
-    all_sc_overdue_monitoring_num=patients.satisfying(
-        """
-        (
-            (
-                methotrexate_3months OR
-                azathioprine_3months
-            )
-            AND
-            (
-                NOT full_blood_count_3months OR
-                NOT liver_function_test_3months OR
-                NOT urea_electrolyte_test_3months
-            )
-        )
-        OR
-        (
-            (
-                leflunomide_3months
-            )
-            AND
-            (
-                NOT full_blood_count_3months OR
-                NOT liver_function_test_3months OR
-                NOT urea_electrolyte_test_3months OR
-                NOT blood_pressure_test_3months
-            )
-        )
-        """,
-    ),
             
     # On Methotrexate Overdue Any Monitoring
     met_overdue_monitoring_num=patients.satisfying(
@@ -400,6 +369,15 @@ study = StudyDefinition(
             NOT liver_function_test_3months OR
             NOT urea_electrolyte_test_3months
         )
+        """,
+    ),
+    
+    # All Shared Care Medicines Overdue Any Monitoring
+    all_sc_overdue_monitoring_num=patients.satisfying(
+        """
+        met_overdue_monitoring_num OR
+        aza_overdue_monitoring_num OR
+        lef_overdue_monitoring_num
         """,
     ),
     
@@ -439,7 +417,7 @@ measures = [
    
     #OVERALL
     Measure(
-        id="all_sc_overdue_monitoring",
+        id="all_sc_overdue_monitoring_by_practice",
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="practice",

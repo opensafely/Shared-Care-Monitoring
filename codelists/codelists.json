@@ -66,6 +66,12 @@
       "downloaded_at": "2022-06-13 20:15:31.552827Z",
       "sha": "96defdd5b5345aaed6c6e2e71188c966288e4731"
     },
+    "nhsd-primary-care-domain-refsets-ld_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/ld_cod/20210127",
+      "url": "https://codelists.opensafely.org/codelist/nhsd-primary-care-domain-refsets/ld_cod/20210127/",
+      "downloaded_at": "2022-06-14 19:37:43.374986Z",
+      "sha": "0c5bc3b050a55c2090e16932fd7364a0be775cb4"
+    },
     "opensafely-housebound.csv": {
       "id": "opensafely/housebound/5bc77310",
       "url": "https://codelists.opensafely.org/codelist/opensafely/housebound/5bc77310/",
@@ -77,12 +83,6 @@
       "url": "https://codelists.opensafely.org/codelist/opensafely/no-longer-housebound/29a88ca6/",
       "downloaded_at": "2022-06-13 20:15:32.924378Z",
       "sha": "cedcdcc0354885c1aa08224072718ff6bdae7450"
-    },
-    "primis-covid19-vacc-uptake-learndis.csv": {
-      "id": "primis-covid19-vacc-uptake/learndis/v1",
-      "url": "https://codelists.opensafely.org/codelist/primis-covid19-vacc-uptake/learndis/v1/",
-      "downloaded_at": "2022-06-13 20:15:33.236636Z",
-      "sha": "41f81fcb9fadb082a77cadd6cf60614d7c8d860f"
     }
   }
 }
