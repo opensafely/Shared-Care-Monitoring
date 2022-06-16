@@ -11,7 +11,7 @@ from cohortextractor import (
 from codelists import *
 
 start_date = "2019-09-01"
-end_date = "2021-07-01"
+end_date = "2019-12-01"
 
 study = StudyDefinition(
     index_date=start_date,
@@ -409,6 +409,37 @@ study = StudyDefinition(
         NOT blood_pressure_test_3months
         """,
     ),
+    
+    
+    ### DENOMINATOR DEFINITIONS ----
+    leflunomide_3months_den=patients.satisfying(
+        """
+        leflunomide_3months
+        """,
+    ),
+    
+    
+    azathioprine_3months_den=patients.satisfying(
+        """
+        azathioprine_3months
+        """,
+    ),
+    
+    methotrexate_3months_den=patients.satisfying(
+        """
+        methotrexate_3months
+        """,
+    ),
+
+    all_sc_meds_den=patients.satisfying(
+        """
+        (
+            methotrexate_3months OR
+            azathioprine_3months OR
+            leflunomide_3months
+        )
+        """,
+    ),
 )
 
 
@@ -419,7 +450,7 @@ measures = [
     Measure(
         id="all_sc_overdue_monitoring_by_practice",
         numerator="all_sc_overdue_monitoring_num",
-        denominator="population",
+        denominator="all_sc_meds_den",
         group_by="practice",
     ),
     
@@ -427,44 +458,44 @@ measures = [
     Measure(
         id="met_overdue_monitoring",
         numerator="met_overdue_monitoring_num",
-        denominator="methotrexate_3months",
+        denominator="methotrexate_3months_den",
     ),
     
     Measure(
         id="lef_overdue_monitoring",
         numerator="lef_overdue_monitoring_num",
-        denominator="leflunomide_3months",
+        denominator="leflunomide_3months_den",
     ),
     
     Measure(
         id="aza_overdue_monitoring",
         numerator="aza_overdue_monitoring_num",
-        denominator="azathioprine_3months",
+        denominator="azathioprine_3months_den",
     ),
     
     #MONITORING PARAMETER BREAKDOWN
     Measure(
         id="fbc_overdue",
         numerator="fbc_overdue_num",
-        denominator="population",
+        denominator="all_sc_meds_den",
     ),
     
     Measure(
         id="lft_overdue",
         numerator="lft_overdue_num",
-        denominator="population",
+        denominator="all_sc_meds_den",
     ),
     
     Measure(
         id="u_e_overdue",
         numerator="u_e_overdue_num",
-        denominator="population",
+        denominator="all_sc_meds_den",
     ),
     
     Measure(
         id="bp_overdue",
         numerator="bp_overdue_num",
-        denominator="leflunomide_3months",
+        denominator="leflunomide_3months_den",
     ),
     
 ]

@@ -53,5 +53,5 @@ actions:
      needs: [generate_study_population_1]
      outputs:
        moderately_sensitive:
-         measure_csv: output/measure_*_rate.csv
+         measure_csv: output/measure_*.csv
 
