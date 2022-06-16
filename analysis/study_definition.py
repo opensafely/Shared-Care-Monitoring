@@ -164,7 +164,7 @@ study = StudyDefinition(
     ),
     
     # Housebound
-    housebound_opensafely = patients.satisfying(
+    housebound = patients.satisfying(
     """housebound_date
                 AND NOT no_longer_housebound
                 AND NOT moved_into_care_home""",
@@ -236,7 +236,7 @@ study = StudyDefinition(
     ### CLINICAL COVARIATES ----
     
     # Dementia
-    dementia_nhsd = patients.satisfying(
+    dementia = patients.satisfying(
         """
         dementia_all
         AND

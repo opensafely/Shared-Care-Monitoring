@@ -10,3 +10,41 @@ actions:
      outputs:
        highly_sensitive:
          cohort: output/input_*.feather
+    
+  generate_report:
+     run: cohort-report:v3.0.0 output/input_2019-09-01.feather output/input_2019-10-01.feather output/input_2019-11-01.feather output/input_2019-12-01.feather output/input_2020-01-01.feather output/input_2020-02-01.feather output/input_2020-03-01.feather output/input_2020-04-01.feather output/input_2020-05-01.feather output/input_2020-06-01.feather output/input_2020-07-01.feather output/input_2020-08-01.feather output/input_2020-09-01.feather output/input_2020-10-01.feather output/input_2020-11-01.feather output/input_2020-12-01.feather output/input_2021-01-01.feather output/input_2021-02-01.feather output/input_2021-03-01.feather output/input_2021-04-01.feather output/input_2021-05-01.feather output/input_2021-06-01.feather output/input_2021-07-01.feather output/input_2021-08-01.feather output/input_2021-09-01.feather
+     needs: [generate_study_population_1]
+     config:
+       variable_types:
+           age_band: categorical
+           sex: categorical
+           ethnicity: categorical
+           practice: categorical
+           region: categorical
+           imdQ5: categorical
+           rural_urban: categorical
+           care_home_resident: binary
+           housebound: binary
+           dementia: binary
+           learning_disability: binary
+           serious_mental_illness: binary
+           methotrexate_3months: binary
+           leflunomide_3months: binary
+           azathioprine_3months: binary
+           full_blood_count_3months: binary
+           liver_function_test_3months: binary
+           urea_electrolyte_test_3months: binary
+           blood_pressure_test_3months: binary
+           met_overdue_monitoring_num: binary
+           lef_overdue_monitoring_num: binary
+           aza_overdue_monitoring_num: binary
+           all_sc_overdue_monitoring_num: binary
+           fbc_overdue_num: binary
+           lft_overdue_num: binary
+           u_e_overdue_num: binary
+           bp_overdue_num: binary
+       output_path: output/cohort_reports_outputs
+     outputs:
+       moderately_sensitive:
+         reports: output/cohort_reports_outputs/descriptives_input_*.html
+                  
