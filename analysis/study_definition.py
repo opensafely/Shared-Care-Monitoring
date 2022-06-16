@@ -236,7 +236,7 @@ study = StudyDefinition(
     ### CLINICAL COVARIATES ----
     
     # Dementia
-    dementia_nhsd = patients.satisfying(
+    dementia = patients.satisfying(
         """
         dementia_all
         AND
