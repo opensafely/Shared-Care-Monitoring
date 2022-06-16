@@ -53,6 +53,36 @@
       "url": "https://codelists.opensafely.org/codelist/opensafely/ethnicity/2020-04-27/",
       "downloaded_at": "2022-06-12 09:43:24.530144Z",
       "sha": "3d2f3998b71863a80b24d60f6f4282e14191ae13"
+    },
+    "nhsd-primary-care-domain-refsets-mh_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/mh_cod/20210127",
+      "url": "https://codelists.opensafely.org/codelist/nhsd-primary-care-domain-refsets/mh_cod/20210127/",
+      "downloaded_at": "2022-06-13 20:15:31.269881Z",
+      "sha": "6e98da3c8765354b47ab74d1bef4679966a337f3"
+    },
+    "nhsd-primary-care-domain-refsets-dem_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/dem_cod/20210127",
+      "url": "https://codelists.opensafely.org/codelist/nhsd-primary-care-domain-refsets/dem_cod/20210127/",
+      "downloaded_at": "2022-06-13 20:15:31.552827Z",
+      "sha": "96defdd5b5345aaed6c6e2e71188c966288e4731"
+    },
+    "nhsd-primary-care-domain-refsets-ld_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/ld_cod/20210127",
+      "url": "https://codelists.opensafely.org/codelist/nhsd-primary-care-domain-refsets/ld_cod/20210127/",
+      "downloaded_at": "2022-06-14 19:37:43.374986Z",
+      "sha": "0c5bc3b050a55c2090e16932fd7364a0be775cb4"
+    },
+    "opensafely-housebound.csv": {
+      "id": "opensafely/housebound/5bc77310",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/housebound/5bc77310/",
+      "downloaded_at": "2022-06-13 20:15:32.190672Z",
+      "sha": "4408752ee525151741ce050f1a20c51cd5c0116a"
+    },
+    "opensafely-no-longer-housebound.csv": {
+      "id": "opensafely/no-longer-housebound/29a88ca6",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/no-longer-housebound/29a88ca6/",
+      "downloaded_at": "2022-06-13 20:15:32.924378Z",
+      "sha": "cedcdcc0354885c1aa08224072718ff6bdae7450"
     }
   }
 }
