@@ -11,7 +11,7 @@ from cohortextractor import (
 from codelists import *
 
 start_date = "2019-09-01"
-end_date = "2021-07-01"
+end_date = "2019-12-01"
 
 study = StudyDefinition(
     index_date=start_date,
@@ -164,7 +164,7 @@ study = StudyDefinition(
     ),
     
     # Housebound
-    housebound_opensafely = patients.satisfying(
+    housebound = patients.satisfying(
     """housebound_date
                 AND NOT no_longer_housebound
                 AND NOT moved_into_care_home""",
@@ -417,7 +417,14 @@ measures = [
    
     #OVERALL
     Measure(
-        id="all_sc_overdue_monitoring_by_practice",
+        id="all_sc_overdue_monitoring_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="population",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_by_practice_rate",
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="practice",
@@ -425,46 +432,53 @@ measures = [
     
     #DRUG BREAKDOWN
     Measure(
-        id="met_overdue_monitoring",
+        id="met_overdue_monitoring_rate",
         numerator="met_overdue_monitoring_num",
         denominator="methotrexate_3months",
+        group_by="population",
     ),
     
     Measure(
-        id="lef_overdue_monitoring",
+        id="lef_overdue_monitoring_rate",
         numerator="lef_overdue_monitoring_num",
         denominator="leflunomide_3months",
+        group_by="population",
     ),
     
     Measure(
-        id="aza_overdue_monitoring",
+        id="aza_overdue_monitoring_rate",
         numerator="aza_overdue_monitoring_num",
         denominator="azathioprine_3months",
+        group_by="population",
     ),
     
     #MONITORING PARAMETER BREAKDOWN
     Measure(
-        id="fbc_overdue",
+        id="fbc_overdue_rate",
         numerator="fbc_overdue_num",
         denominator="population",
+        group_by="population",
     ),
     
     Measure(
-        id="lft_overdue",
+        id="lft_overdue_rate",
         numerator="lft_overdue_num",
         denominator="population",
+        group_by="population",
     ),
     
     Measure(
-        id="u_e_overdue",
+        id="u_e_overdue_rate",
         numerator="u_e_overdue_num",
         denominator="population",
+        group_by="population",
     ),
     
     Measure(
-        id="bp_overdue",
+        id="bp_overdue_rate",
         numerator="bp_overdue_num",
         denominator="leflunomide_3months",
+        group_by="population",
     ),
     
 ]
