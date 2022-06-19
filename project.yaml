@@ -15,34 +15,6 @@ actions:
      run: cohort-report:v3.0.0 output/input_2019-09-01.feather output/input_2019-10-01.feather output/input_2019-11-01.feather output/input_2019-12-01.feather
      needs: [generate_study_population_1]
      config:
-       variable_types:
-           age_band: categorical
-           sex: categorical
-           ethnicity: categorical
-           practice: categorical
-           region: categorical
-           imdQ5: categorical
-           rural_urban: categorical
-           care_home_resident: binary
-           housebound: binary
-           dementia: binary
-           learning_disability: binary
-           serious_mental_illness: binary
-           methotrexate_3months: binary
-           leflunomide_3months: binary
-           azathioprine_3months: binary
-           full_blood_count_3months: binary
-           liver_function_test_3months: binary
-           urea_electrolyte_test_3months: binary
-           blood_pressure_test_3months: binary
-           met_overdue_monitoring_num: binary
-           lef_overdue_monitoring_num: binary
-           aza_overdue_monitoring_num: binary
-           all_sc_overdue_monitoring_num: binary
-           fbc_overdue_num: binary
-           lft_overdue_num: binary
-           u_e_overdue_num: binary
-           bp_overdue_num: binary
        output_path: output/cohort_reports_outputs
      outputs:
        moderately_sensitive:
@@ -53,5 +25,5 @@ actions:
      needs: [generate_study_population_1]
      outputs:
        moderately_sensitive:
-         measure_csv: output/measure_*.csv
+         measure_csv: output/measure_*_rate.csv
 

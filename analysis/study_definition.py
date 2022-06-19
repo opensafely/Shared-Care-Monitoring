@@ -409,37 +409,6 @@ study = StudyDefinition(
         NOT blood_pressure_test_3months
         """,
     ),
-    
-    
-    ### DENOMINATOR DEFINITIONS ----
-    leflunomide_3months_den=patients.satisfying(
-        """
-        leflunomide_3months
-        """,
-    ),
-    
-    
-    azathioprine_3months_den=patients.satisfying(
-        """
-        azathioprine_3months
-        """,
-    ),
-    
-    methotrexate_3months_den=patients.satisfying(
-        """
-        methotrexate_3months
-        """,
-    ),
-
-    all_sc_meds_den=patients.satisfying(
-        """
-        (
-            methotrexate_3months OR
-            azathioprine_3months OR
-            leflunomide_3months
-        )
-        """,
-    ),
 )
 
 
@@ -448,54 +417,68 @@ measures = [
    
     #OVERALL
     Measure(
-        id="all_sc_overdue_monitoring_by_practice",
+        id="all_sc_overdue_monitoring_rate",
         numerator="all_sc_overdue_monitoring_num",
-        denominator="all_sc_meds_den",
+        denominator="population",
+        group_by="population",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_by_practice_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
         group_by="practice",
     ),
     
     #DRUG BREAKDOWN
     Measure(
-        id="met_overdue_monitoring",
+        id="met_overdue_monitoring_rate",
         numerator="met_overdue_monitoring_num",
-        denominator="methotrexate_3months_den",
+        denominator="methotrexate_3months",
+        group_by="population",
     ),
     
     Measure(
-        id="lef_overdue_monitoring",
+        id="lef_overdue_monitoring_rate",
         numerator="lef_overdue_monitoring_num",
-        denominator="leflunomide_3months_den",
+        denominator="leflunomide_3months",
+        group_by="population",
     ),
     
     Measure(
-        id="aza_overdue_monitoring",
+        id="aza_overdue_monitoring_rate",
         numerator="aza_overdue_monitoring_num",
-        denominator="azathioprine_3months_den",
+        denominator="azathioprine_3months",
+        group_by="population",
     ),
     
     #MONITORING PARAMETER BREAKDOWN
     Measure(
-        id="fbc_overdue",
+        id="fbc_overdue_rate",
         numerator="fbc_overdue_num",
-        denominator="all_sc_meds_den",
+        denominator="population",
+        group_by="population",
     ),
     
     Measure(
-        id="lft_overdue",
+        id="lft_overdue_rate",
         numerator="lft_overdue_num",
-        denominator="all_sc_meds_den",
+        denominator="population",
+        group_by="population",
     ),
     
     Measure(
-        id="u_e_overdue",
+        id="u_e_overdue_rate",
         numerator="u_e_overdue_num",
-        denominator="all_sc_meds_den",
+        denominator="population",
+        group_by="population",
     ),
     
     Measure(
-        id="bp_overdue",
+        id="bp_overdue_rate",
         numerator="bp_overdue_num",
-        denominator="leflunomide_3months_den",
+        denominator="leflunomide_3months",
+        group_by="population",
     ),
     
 ]
