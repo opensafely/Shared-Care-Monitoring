@@ -157,7 +157,7 @@ study = StudyDefinition(
     ),
     
     # Care Home Resident
-    care_home_resident=patients.with_these_clinical_events(
+    care_home=patients.with_these_clinical_events(
         codelist=care_home_codelist,
         find_last_match_in_period=True,
         returning="binary_flag",
@@ -408,19 +408,7 @@ study = StudyDefinition(
         leflunomide_3months AND
         NOT blood_pressure_test_3months
         """,
-    ),
-
-                                                                   
-    
-                                                                    ###DEMENTIA TEST / Might not be best method
-    # With Dementia Overdue Any Monitoring
-    all_sc_overdue_monitoring_with_dementia_num=patients.satisfying(
-        """
-        all_sc_overdue_monitoring_num AND
-        dementia
-        """,
-    ),
-       
+    ),    
 )
 
 
@@ -433,8 +421,7 @@ measures = [
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="population",
-    ),
-    
+    ), 
     
     #DRUG BREAKDOWN
     Measure(
@@ -489,6 +476,20 @@ measures = [
 
     #DEMOGRAPHIC GROUP BREAKDOWN
     Measure(
+        id="all_sc_overdue_monitoring_by_age_band_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="age_band",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_by_sex_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="sex",
+    ),
+    
+    Measure(
         id="all_sc_overdue_monitoring_by_region_rate",
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
@@ -510,9 +511,9 @@ measures = [
     ),
     
     Measure(
-        id="all_sc_overdue_monitoring_by_imdQ5_rate", #May want to restrict population to only those with imd score?
+        id="all_sc_overdue_monitoring_by_imdQ5_rate", 
         numerator="all_sc_overdue_monitoring_num",
-        denominator="population",
+        denominator="population",                     #Later may want to restrict population to only those with imd score?
         group_by="imdQ5",
     ),
     
@@ -521,6 +522,20 @@ measures = [
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="rural_urban",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_by_care_home_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="care_home",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_by_housebound_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="housebound",
     ),
     
     #CLINICAL GROUP BREAKDOWN
@@ -532,10 +547,16 @@ measures = [
     ),
     
     Measure(
-        id="all_sc_overdue_monitoring_with_dementia_rate",
-        numerator="all_sc_overdue_monitoring_with_dementia_num",
-        denominator="dementia",                              #is this number actually patients with dementia?
-        group_by="population",
+        id="all_sc_overdue_monitoring_by_learning_disability_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="learning_disability",
     ),
     
+    Measure(
+        id="all_sc_overdue_monitoring_by_serious_mental_illness_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="serious_mental_illness",
+    ),  
 ]
