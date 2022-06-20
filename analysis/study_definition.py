@@ -157,7 +157,7 @@ study = StudyDefinition(
     ),
     
     # Care Home Resident
-    care_home_resident=patients.with_these_clinical_events(
+    care_home=patients.with_these_clinical_events(
         codelist=care_home_codelist,
         find_last_match_in_period=True,
         returning="binary_flag",
@@ -408,7 +408,7 @@ study = StudyDefinition(
         leflunomide_3months AND
         NOT blood_pressure_test_3months
         """,
-    ),
+    ),    
 )
 
 
@@ -421,14 +421,7 @@ measures = [
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="population",
-    ),
-    
-    Measure(
-        id="all_sc_overdue_monitoring_by_practice_rate",
-        numerator="all_sc_overdue_monitoring_num",
-        denominator="population",
-        group_by="practice",
-    ),
+    ), 
     
     #DRUG BREAKDOWN
     Measure(
@@ -480,5 +473,90 @@ measures = [
         denominator="leflunomide_3months",
         group_by="population",
     ),
+
+    #DEMOGRAPHIC GROUP BREAKDOWN
+    Measure(
+        id="all_sc_overdue_monitoring_by_age_band_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="age_band",
+    ),
     
+    Measure(
+        id="all_sc_overdue_monitoring_by_sex_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="sex",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_by_region_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="region",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_by_practice_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="practice",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_by_ethnicity_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="ethnicity",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_by_imdQ5_rate", 
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",                     #Later may want to restrict population to only those with imd score?
+        group_by="imdQ5",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_by_rurality_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="rural_urban",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_by_care_home_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="care_home",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_by_housebound_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="housebound",
+    ),
+    
+    #CLINICAL GROUP BREAKDOWN
+    Measure(
+        id="all_sc_overdue_monitoring_by_dementia_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="dementia",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_by_learning_disability_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="learning_disability",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_by_serious_mental_illness_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="serious_mental_illness",
+    ),  
 ]
