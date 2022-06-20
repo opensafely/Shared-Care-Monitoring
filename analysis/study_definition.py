@@ -409,6 +409,18 @@ study = StudyDefinition(
         NOT blood_pressure_test_3months
         """,
     ),
+
+                                                                   
+    
+                                                                    ###DEMENTIA TEST / Might not be best method
+    # With Dementia Overdue Any Monitoring
+    all_sc_overdue_monitoring_with_dementia_num=patients.satisfying(
+        """
+        all_sc_overdue_monitoring_num AND
+        dementia
+        """,
+    ),
+       
 )
 
 
@@ -423,12 +435,6 @@ measures = [
         group_by="population",
     ),
     
-    Measure(
-        id="all_sc_overdue_monitoring_by_practice_rate",
-        numerator="all_sc_overdue_monitoring_num",
-        denominator="population",
-        group_by="practice",
-    ),
     
     #DRUG BREAKDOWN
     Measure(
@@ -478,6 +484,57 @@ measures = [
         id="bp_overdue_rate",
         numerator="bp_overdue_num",
         denominator="leflunomide_3months",
+        group_by="population",
+    ),
+
+    #DEMOGRAPHIC GROUP BREAKDOWN
+    Measure(
+        id="all_sc_overdue_monitoring_by_region_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="region",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_by_practice_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="practice",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_by_ethnicity_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="ethnicity",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_by_imdQ5_rate", #May want to restrict population to only those with imd score?
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="imdQ5",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_by_rurality_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="rural_urban",
+    ),
+    
+    #CLINICAL GROUP BREAKDOWN
+    Measure(
+        id="all_sc_overdue_monitoring_by_dementia_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="dementia",
+    ),
+    
+    Measure(
+        id="all_sc_overdue_monitoring_with_dementia_rate",
+        numerator="all_sc_overdue_monitoring_with_dementia_num",
+        denominator="dementia",                              #is this number actually patients with dementia?
         group_by="population",
     ),
     
