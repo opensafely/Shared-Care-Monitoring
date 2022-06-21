@@ -113,41 +113,6 @@ study = StudyDefinition(
         },
     ),
     
-    # Ethnicity
-    ethnicity = patients.categorised_as(
-            {"Missing": "DEFAULT",
-            "White": "eth='1' OR (NOT eth AND ethnicity_sus='1')", 
-            "Mixed": "eth='2' OR (NOT eth AND ethnicity_sus='2')", 
-            "South Asian": "eth='3' OR (NOT eth AND ethnicity_sus='3')", 
-            "Black": "eth='4' OR (NOT eth AND ethnicity_sus='4')",  
-            "Other": "eth='5' OR (NOT eth AND ethnicity_sus='5')",
-            }, 
-            return_expectations={
-            "category": {"ratios": {"White": 0.2, "Mixed": 0.2, "South Asian": 0.2, "Black": 0.2, "Other": 0.2}},
-            "incidence": 0.4,
-            },
-
-            ethnicity_sus = patients.with_ethnicity_from_sus(
-                returning="group_6",  
-                use_most_frequent_code=True,
-                return_expectations={
-                    "category": {"ratios": {"1": 0.2, "2": 0.2, "3": 0.2, "4": 0.2, "5": 0.2}},
-                    "incidence": 0.4,
-                    },
-            ),
-
-            eth=patients.with_these_clinical_events(
-                ethnicity_codes,
-                returning="category",
-                find_last_match_in_period=True,
-                on_or_before="index_date",
-                return_expectations={
-                    "category": {"ratios": {"1": 0.4, "2": 0.4, "3": 0.2, "4":0.2,"5": 0.2}},
-                    "incidence": 0.75,
-                },
-            ),
-    ),
-    
     # Sex
     sex=patients.sex(
         return_expectations={
@@ -297,7 +262,7 @@ study = StudyDefinition(
         between=["index_date - 3 months", "index_date"]
     ),
     
-    
+
     ### MONITORING PARAMETERS ----
     
     # Full Blood Count
@@ -336,7 +301,7 @@ study = StudyDefinition(
     ### NUMERATOR DEFINITIONS ----
             
     # On Methotrexate Overdue Any Monitoring
-    met_overdue_monitoring_num=patients.satisfying(
+    met_overdue_num=patients.satisfying(
         """
         methotrexate_3months AND
         (
@@ -348,7 +313,7 @@ study = StudyDefinition(
     ),
     
     # On Leflunomide Overdue Any Monitoring
-    lef_overdue_monitoring_num=patients.satisfying(
+    lef_overdue_num=patients.satisfying(
         """
         leflunomide_3months AND
         (
@@ -361,7 +326,7 @@ study = StudyDefinition(
     ),
     
     # On Azathioprine Overdue Any Monitoring
-    aza_overdue_monitoring_num=patients.satisfying(
+    aza_overdue_num=patients.satisfying(
         """
         azathioprine_3months AND
         (
@@ -375,9 +340,9 @@ study = StudyDefinition(
     # All Shared Care Medicines Overdue Any Monitoring
     all_sc_overdue_monitoring_num=patients.satisfying(
         """
-        met_overdue_monitoring_num OR
-        aza_overdue_monitoring_num OR
-        lef_overdue_monitoring_num
+        met_overdue_num OR
+        aza_overdue_num OR
+        lef_overdue_num
         """,
     ),
     
@@ -414,7 +379,7 @@ study = StudyDefinition(
 
 ### MEASURES ----
 measures = [
-   
+
     #OVERALL
     Measure(
         id="all_sc_overdue_monitoring_rate",
@@ -425,22 +390,22 @@ measures = [
     
     #DRUG BREAKDOWN
     Measure(
-        id="met_overdue_monitoring_rate",
-        numerator="met_overdue_monitoring_num",
+        id="met_overdue_rate",
+        numerator="met_overdue_num",
         denominator="methotrexate_3months",
         group_by="population",
     ),
     
     Measure(
-        id="lef_overdue_monitoring_rate",
-        numerator="lef_overdue_monitoring_num",
+        id="lef_overdue_rate",
+        numerator="lef_overdue_num",
         denominator="leflunomide_3months",
         group_by="population",
     ),
     
     Measure(
-        id="aza_overdue_monitoring_rate",
-        numerator="aza_overdue_monitoring_num",
+        id="aza_overdue_rate",
+        numerator="aza_overdue_num",
         denominator="azathioprine_3months",
         group_by="population",
     ),
@@ -518,7 +483,7 @@ measures = [
     ),
     
     Measure(
-        id="all_sc_overdue_monitoring_by_rurality_rate",
+        id="all_sc_overdue_monitoring_by_rural_urban_rate",
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="rural_urban",
