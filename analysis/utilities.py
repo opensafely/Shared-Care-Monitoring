@@ -65,8 +65,28 @@ def plot_measures(
         plt.legend(
             sorted(df[category].unique()), bbox_to_anchor=(1.04, 1), loc="upper left"
         )
-
+    
+    plt.vlines(
+        x=[pd.to_datetime("2020-03-01")],
+        ymin=0,
+        ymax=100,
+        colors="orange",
+        ls="--",
+        label="National Lockdown",
+    )
+    
+    plt.vlines(
+        x=[pd.to_datetime("2020-06-01")],
+        ymin=0,
+        ymax=100,
+        colors="green",
+        ls="--",
+        label="Maximum Impact",
+    )
+        
     plt.tight_layout()
 
     plt.savefig(f"output/{filename}.png")
     plt.clf()
+    
+
