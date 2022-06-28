@@ -10,8 +10,8 @@ from cohortextractor import (
 
 from codelists import *
 
-start_date = "2019-09-01"
-end_date = "2019-12-01"
+start_date = "2019-02-01"
+end_date = "2021-02-01"
 
 study = StudyDefinition(
     index_date=start_date,
@@ -27,6 +27,7 @@ study = StudyDefinition(
        NOT died AND
        (age_band != "missing") AND 
        (sex = 'M' OR sex = 'F') AND
+       (imd != "0") AND
        (
         (methotrexate_3months) OR
         (leflunomide_3months) OR
@@ -175,12 +176,12 @@ study = StudyDefinition(
             "rate": "universal",
             "category": {
                 "ratios": {
-                    "0": 0.05,
-                    "1": 0.19,
-                    "2": 0.19,
-                    "3": 0.19,
-                    "4": 0.19,
-                    "5": 0.19,
+                    "0": 0.00,
+                    "1": 0.2,
+                    "2": 0.2,
+                    "3": 0.2,
+                    "4": 0.2,
+                    "5": 0.2,
                 }
             },
         },
@@ -337,13 +338,34 @@ study = StudyDefinition(
         """,
     ),
     
-    # All Shared Care Medicines Overdue Any Monitoring
+    # All Shared Care Medications Overdue Any Monitoring
     all_sc_overdue_monitoring_num=patients.satisfying(
         """
         met_overdue_num OR
         aza_overdue_num OR
         lef_overdue_num
         """,
+    ),
+    
+    # Categorise for Shared Care Medication Issued
+    medication = patients.categorised_as(
+        {
+            "no_meds": "DEFAULT",
+            "Leflunomide": "leflunomide_3months",
+            "Methotrexate": "methotrexate_3months",
+            "Azathioprine": "azathioprine_3months",
+        },
+        return_expectations={
+            "rate": "universal",
+            "category": {
+                "ratios": {
+                    "no_meds": 0,
+                    "Leflunomide": 0.33,
+                    "Methotrexate": 0.34,
+                    "Azathioprine": 0.33,
+                }
+            },
+        },
     ),
     
     # No Full Blood Count within 3 months
@@ -373,9 +395,32 @@ study = StudyDefinition(
         leflunomide_3months AND
         NOT blood_pressure_test_3months
         """,
-    ),    
+    ),
+    
+    # Categorise for Monitoring Test Overdue
+    monitoring_test = patients.categorised_as(
+        {
+            "Nothing_Overdue": "DEFAULT",
+            "No_FBC": "NOT full_blood_count_3months",
+            "No_LFT": "NOT liver_function_test_3months",
+            "No_U&E": "NOT urea_electrolyte_test_3months",
+            "No_BP": "leflunomide_3months AND NOT blood_pressure_test_3months",
+        },
+        return_expectations={
+            "rate": "universal",
+            "category": {
+                "ratios": {
+                    "Nothing_Overdue": 0.2,
+                    "No_FBC": 0.2,
+                    "No_LFT": 0.2,
+                    "No_U&E": 0.2,
+                    "No_BP": 0.2,
+                }
+            },
+        },
+    ),
 )
-
+    
 
 ### MEASURES ----
 measures = [
@@ -388,7 +433,7 @@ measures = [
         group_by="population",
     ), 
     
-    #DRUG BREAKDOWN
+    #MEDICATION BREAKDOWN
     Measure(
         id="met_overdue_rate",
         numerator="met_overdue_num",
@@ -410,7 +455,17 @@ measures = [
         group_by="population",
     ),
     
-    #MONITORING PARAMETER BREAKDOWN
+    #GROUPED BY MEDICATION
+    Measure(
+        id="all_sc_overdue_monitoring_by_medication_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="medication",
+    ), 
+         
+         
+    
+    #MONITORING TEST BREAKDOWN
     Measure(
         id="fbc_overdue_rate",
         numerator="fbc_overdue_num",
@@ -438,6 +493,15 @@ measures = [
         denominator="leflunomide_3months",
         group_by="population",
     ),
+    
+    #GROUPED BY MONITORING TEST
+    Measure(
+        id="all_sc_overdue_monitoring_by_monitoring_test_rate",
+        numerator="all_sc_overdue_monitoring_num",
+        denominator="population",
+        group_by="monitoring_test",
+    ), 
+         
 
     #DEMOGRAPHIC GROUP BREAKDOWN
     Measure(
@@ -478,7 +542,7 @@ measures = [
     Measure(
         id="all_sc_overdue_monitoring_by_imdQ5_rate", 
         numerator="all_sc_overdue_monitoring_num",
-        denominator="population",                     #Later may want to restrict population to only those with imd score?
+        denominator="population",
         group_by="imdQ5",
     ),
     

@@ -6,7 +6,7 @@ expectations:
 actions:
 
   generate_study_population_1:
-     run: cohortextractor:latest generate_cohort --study-definition study_definition --index-date-range "2019-09-01 to 2019-12-01 by month" --output-format csv.gz
+     run: cohortextractor:latest generate_cohort --study-definition study_definition --index-date-range "2019-02-01 to 2021-02-01 by month" --output-format csv.gz
      outputs:
        highly_sensitive:
          cohort: output/input_*.csv.gz
@@ -27,43 +27,6 @@ actions:
     outputs:
       highly_sensitive:
         cohort: output/joined/input_20*.csv.gz
-    
-  generate_report:
-     run: cohort-report:v3.0.0 output/joined/input_2019-09-01.csv.gz output/joined/input_2019-10-01.csv.gz output/joined/input_2019-11-01.csv.gz output/joined/input_2019-12-01.csv.gz
-     needs: [join_cohorts]
-     config:
-       variable_types:
-           age_band: categorical
-           sex: categorical
-           ethnicity: categorical
-           practice: categorical
-           region: categorical
-           imdQ5: categorical
-           rural_urban: categorical
-           care_home: binary
-           housebound: binary
-           dementia: binary
-           learning_disability: binary
-           serious_mental_illness: binary
-           methotrexate_3months: binary
-           leflunomide_3months: binary
-           azathioprine_3months: binary
-           full_blood_count_3months: binary
-           liver_function_test_3months: binary
-           urea_electrolyte_test_3months: binary
-           blood_pressure_test_3months: binary
-           met_overdue_num: binary
-           lef_overdue_num: binary
-           aza_overdue_num: binary
-           all_sc_overdue_monitoring_num: binary
-           fbc_overdue_num: binary
-           lft_overdue_num: binary
-           u_e_overdue_num: binary
-           bp_overdue_num: binary
-       output_path: output/cohort_reports_outputs
-     outputs:
-       moderately_sensitive:
-         reports: output/cohort_reports_outputs/descriptives_input_*.html
                   
   generate_measures:
      run: cohortextractor:latest generate_measures --study-definition study_definition --skip-existing --output-dir output/joined
@@ -71,8 +34,18 @@ actions:
      outputs:
        moderately_sensitive:
          measure_csv: output/joined/measure_*_rate.csv
+             
+  generate_event_deciles_charts:
+     run: >
+       deciles-charts:v0.0.21
+         --input-files output/joined/measure_all_sc_overdue_monitoring_rate.csv
+         --output-dir output/joined
+     needs: [generate_measures]
+     outputs:
+       moderately_sensitive:
+         deciles_charts: output/joined/deciles_*_monitoring_rate.*
          
-  generate_deciles_charts:
+  generate_practice_deciles_charts:
      run: >
        deciles-charts:v0.0.21
          --input-files output/joined/measure_all_sc_overdue_monitoring_by_practice_rate.csv
@@ -80,13 +53,11 @@ actions:
      needs: [generate_measures]
      outputs:
        moderately_sensitive:
-         deciles_charts: output/joined/deciles_*_*.*
-
+         deciles_charts: output/joined/deciles_*_by_practice_rate.*
+              
   generate_plots:
      run: python:latest python analysis/plots.py
      needs: [generate_measures]
      outputs:
        moderately_sensitive:
          counts: output/joined/plot_*.png
-
-
