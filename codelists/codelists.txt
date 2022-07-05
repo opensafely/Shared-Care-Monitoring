@@ -1,9 +1,9 @@
 opensafely/methotrexate-oral/041a8320/
 opensafely/azathioprine-dmd/78f0ddfe/
 opensafely/leflunomide-dmd/1765d120/
-user/Andrew/fbc-check-represented-by-total-white-cell-count/27e2af9a/
-user/Andrew/lft-check-represented-by-serum-bilirubin-level/0ed33c65/
-user/Andrew/ue-check-represented-by-serum-creatinine-level/75c3c92f/
+opensafely/red-blood-cell-rbc-tests/576a859e/
+opensafely/alanine-aminotransferase-alt-tests/2298df3e/
+opensafely/sodium-tests-numerical-value/32bff605/
 opensafely/systolic-blood-pressure-qof/3572b5fb/
 opensafely/nhs-england-care-homes-residential-status/3712ef13/
 opensafely/ethnicity/2020-04-27/

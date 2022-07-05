@@ -30,21 +30,21 @@ methotrexate_codelist = codelist_from_csv(
 
 # FBC
 full_blood_count_codelist = codelist_from_csv(
-    "codelists/user-Andrew-fbc-check-represented-by-total-white-cell-count.csv",
+    "codelists/opensafely-red-blood-cell-rbc-tests.csv",
     system="snomed",
     column="code",
 )
 
 # LFT
 liver_function_test_codelist = codelist_from_csv(
-    "codelists/user-Andrew-lft-check-represented-by-serum-bilirubin-level.csv",
+    "codelists/opensafely-alanine-aminotransferase-alt-tests.csv",
     system="snomed",
     column="code",
 )
 
 # U&E
 urea_electrolyte_test_codelist = codelist_from_csv(
-    "codelists/user-Andrew-ue-check-represented-by-serum-creatinine-level.csv",
+    "codelists/opensafely-sodium-tests-numerical-value.csv",
     system="snomed",
     column="code",
 )

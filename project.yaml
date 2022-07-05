@@ -4,9 +4,9 @@ expectations:
   population_size: 1000
 
 actions:
-
+         
   generate_study_population_1:
-     run: cohortextractor:latest generate_cohort --study-definition study_definition --index-date-range "2019-02-01 to 2021-02-01 by month" --output-format csv.gz
+     run: cohortextractor:latest generate_cohort --study-definition study_definition --index-date-range "2019-12-01 to 2020-03-01 by month" --output-format csv.gz
      outputs:
        highly_sensitive:
          cohort: output/input_*.csv.gz

@@ -10,8 +10,8 @@ from cohortextractor import (
 
 from codelists import *
 
-start_date = "2019-02-01"
-end_date = "2021-02-01"
+start_date = "2019-11-01"   #will be 2019-12-01 to 2021-12-01 in final data
+end_date = "2020-03-01"
 
 study = StudyDefinition(
     index_date=start_date,
@@ -29,9 +29,9 @@ study = StudyDefinition(
        (sex = 'M' OR sex = 'F') AND
        (imd != "0") AND
        (
-        (methotrexate_3months) OR
-        (leflunomide_3months) OR
-        (azathioprine_3months)
+        (on_methotrexate) OR
+        (on_leflunomide) OR
+        (on_azathioprine)
        )
        """
     ),
@@ -239,7 +239,7 @@ study = StudyDefinition(
     
     ### MEDICATION ISSUES ----
     
-    # Methotrexate
+    # Methotrexate within 3m
     methotrexate_3months=patients.with_these_medications(
         codelist=methotrexate_codelist,
         find_last_match_in_period=True,
@@ -247,7 +247,7 @@ study = StudyDefinition(
         between=["index_date - 3 months", "index_date"]
     ),
     
-    # Leflunomide
+    # Leflunomide within 3m
     leflunomide_3months=patients.with_these_medications(
         codelist=leflunomide_codelist,
         find_last_match_in_period=True,
@@ -255,13 +255,61 @@ study = StudyDefinition(
         between=["index_date - 3 months", "index_date"]
     ),
     
-    # Azathioprine
+    # Azathioprine within 3m
     azathioprine_3months=patients.with_these_medications(
         codelist=azathioprine_codelist,
         find_last_match_in_period=True,
         returning="binary_flag",
         between=["index_date - 3 months", "index_date"]
     ),
+    
+    # Methotrexate within 3-6m
+    methotrexate_3to6months=patients.with_these_medications(
+        codelist=methotrexate_codelist,
+        find_last_match_in_period=True,
+        returning="binary_flag",
+        between=["index_date - 6 months", "index_date - 3 months"]
+    ),
+    
+    # Leflunomide within 3-6m
+    leflunomide_3to6months=patients.with_these_medications(
+        codelist=leflunomide_codelist,
+        find_last_match_in_period=True,
+        returning="binary_flag",
+        between=["index_date - 6 months", "index_date - 3 months"]
+    ),
+    
+    # Azathioprine within 3-6m
+    azathioprine_3to6months=patients.with_these_medications(
+        codelist=azathioprine_codelist,
+        find_last_match_in_period=True,
+        returning="binary_flag",
+        between=["index_date - 6 months", "index_date - 3 months"]
+    ),
+    
+    # On Methotrexate
+    on_methotrexate=patients.satisfying(
+        """
+            methotrexate_3months AND
+            methotrexate_3to6months
+        """,
+    ),
+    
+    # On Leflunomide
+    on_leflunomide=patients.satisfying(
+        """
+            leflunomide_3months AND
+            leflunomide_3to6months
+        """,
+    ),
+    
+    # On Azathioprine
+    on_azathioprine=patients.satisfying(
+        """
+            azathioprine_3months AND
+            azathioprine_3to6months
+        """,
+    ), 
     
 
     ### MONITORING PARAMETERS ----
@@ -304,7 +352,7 @@ study = StudyDefinition(
     # On Methotrexate Overdue Any Monitoring
     met_overdue_num=patients.satisfying(
         """
-        methotrexate_3months AND
+        on_methotrexate AND
         (
             NOT full_blood_count_3months OR
             NOT liver_function_test_3months OR
@@ -316,7 +364,7 @@ study = StudyDefinition(
     # On Leflunomide Overdue Any Monitoring
     lef_overdue_num=patients.satisfying(
         """
-        leflunomide_3months AND
+        on_leflunomide AND
         (
             NOT full_blood_count_3months OR
             NOT liver_function_test_3months OR
@@ -329,7 +377,7 @@ study = StudyDefinition(
     # On Azathioprine Overdue Any Monitoring
     aza_overdue_num=patients.satisfying(
         """
-        azathioprine_3months AND
+        on_azathioprine AND
         (
             NOT full_blood_count_3months OR
             NOT liver_function_test_3months OR
@@ -351,9 +399,9 @@ study = StudyDefinition(
     medication = patients.categorised_as(
         {
             "no_meds": "DEFAULT",
-            "Leflunomide": "leflunomide_3months",
-            "Methotrexate": "methotrexate_3months",
-            "Azathioprine": "azathioprine_3months",
+            "Leflunomide": "on_leflunomide",
+            "Methotrexate": "on_methotrexate",
+            "Azathioprine": "on_azathioprine",
         },
         return_expectations={
             "rate": "universal",
@@ -397,6 +445,16 @@ study = StudyDefinition(
         """,
     ),
     
+    # No Monitoring Test of Any Type within 3m
+    any_monitoring_overdue_num=patients.satisfying(
+        """
+        fbc_overdue_num OR
+        lft_overdue_num OR
+        u_e_overdue_num OR
+        bp_overdue_num
+        """,
+    ),
+    
     # Categorise for Monitoring Test Overdue
     monitoring_test = patients.categorised_as(
         {
@@ -432,28 +490,7 @@ measures = [
         denominator="population",
         group_by="population",
     ), 
-    
-    #MEDICATION BREAKDOWN
-    Measure(
-        id="met_overdue_rate",
-        numerator="met_overdue_num",
-        denominator="methotrexate_3months",
-        group_by="population",
-    ),
-    
-    Measure(
-        id="lef_overdue_rate",
-        numerator="lef_overdue_num",
-        denominator="leflunomide_3months",
-        group_by="population",
-    ),
-    
-    Measure(
-        id="aza_overdue_rate",
-        numerator="aza_overdue_num",
-        denominator="azathioprine_3months",
-        group_by="population",
-    ),
+
     
     #GROUPED BY MEDICATION
     Measure(
@@ -461,8 +498,7 @@ measures = [
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="medication",
-    ), 
-         
+    ),  
          
     
     #MONITORING TEST BREAKDOWN
@@ -490,18 +526,18 @@ measures = [
     Measure(
         id="bp_overdue_rate",
         numerator="bp_overdue_num",
-        denominator="leflunomide_3months",
+        denominator="on_leflunomide",
         group_by="population",
     ),
     
     #GROUPED BY MONITORING TEST
     Measure(
         id="all_sc_overdue_monitoring_by_monitoring_test_rate",
-        numerator="all_sc_overdue_monitoring_num",
+        numerator="any_monitoring_overdue_num",
         denominator="population",
         group_by="monitoring_test",
     ), 
-         
+    
 
     #DEMOGRAPHIC GROUP BREAKDOWN
     Measure(
