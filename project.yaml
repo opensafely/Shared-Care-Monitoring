@@ -19,7 +19,7 @@ actions:
 
   join_cohorts:
     run: >
-      cohort-joiner:v0.0.7
+      cohort-joiner:v0.0.41
         --lhs output/input_20*.csv.gz
         --rhs output/input_ethnicity.csv.gz
         --output-dir output/joined
@@ -37,7 +37,7 @@ actions:
              
   generate_event_deciles_charts:
      run: >
-       deciles-charts:v0.0.21
+       deciles-charts:v0.0.30
          --input-files output/joined/measure_all_sc_overdue_monitoring_rate.csv
          --output-dir output/joined
      needs: [generate_measures]
@@ -47,7 +47,7 @@ actions:
          
   generate_practice_deciles_charts:
      run: >
-       deciles-charts:v0.0.21
+       deciles-charts:v0.0.30
          --input-files output/joined/measure_all_sc_overdue_monitoring_by_practice_rate.csv
          --output-dir output/joined
      needs: [generate_measures]

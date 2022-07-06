@@ -444,39 +444,6 @@ study = StudyDefinition(
         NOT blood_pressure_test_3months
         """,
     ),
-    
-    # No Monitoring Test of Any Type within 3m
-    any_monitoring_overdue_num=patients.satisfying(
-        """
-        fbc_overdue_num OR
-        lft_overdue_num OR
-        u_e_overdue_num OR
-        bp_overdue_num
-        """,
-    ),
-    
-    # Categorise for Monitoring Test Overdue
-    monitoring_test = patients.categorised_as(
-        {
-            "Nothing_Overdue": "DEFAULT",
-            "No_FBC": "NOT full_blood_count_3months",
-            "No_LFT": "NOT liver_function_test_3months",
-            "No_U&E": "NOT urea_electrolyte_test_3months",
-            "No_BP": "leflunomide_3months AND NOT blood_pressure_test_3months",
-        },
-        return_expectations={
-            "rate": "universal",
-            "category": {
-                "ratios": {
-                    "Nothing_Overdue": 0.2,
-                    "No_FBC": 0.2,
-                    "No_LFT": 0.2,
-                    "No_U&E": 0.2,
-                    "No_BP": 0.2,
-                }
-            },
-        },
-    ),
 )
     
 
@@ -529,14 +496,6 @@ measures = [
         denominator="on_leflunomide",
         group_by="population",
     ),
-    
-    #GROUPED BY MONITORING TEST
-    Measure(
-        id="all_sc_overdue_monitoring_by_monitoring_test_rate",
-        numerator="any_monitoring_overdue_num",
-        denominator="population",
-        group_by="monitoring_test",
-    ), 
     
 
     #DEMOGRAPHIC GROUP BREAKDOWN
