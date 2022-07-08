@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from pathlib import Path
+import matplotlib.dates as mdates
 
 BASE_DIR = Path(__file__).parents[1]
 OUTPUT_DIR = BASE_DIR / "output"
@@ -28,7 +29,11 @@ def plot_measures(
         as_bar: Boolean indicating if bar chart should be plotted instead of line chart. Only valid if no categories.
         category: Name of column indicating different categories
     """
+    
     plt.figure(figsize=(15, 8))
+    
+    dtFmt = mdates.DateFormatter('%b-%Y') # define the date formatting
+    plt.gca().xaxis.set_major_formatter(dtFmt) 
     
     df = df.sort_values(by="date")
     #mask nan values (redacted)
@@ -50,7 +55,7 @@ def plot_measures(
 
     x_labels = sorted(df["date"].unique())
     plt.ylabel(y_label)
-    plt.xlabel("Date")
+    plt.xlabel("Time Period")
     plt.xticks(x_labels, rotation="vertical")
     plt.title(title)
     plt.xlim(x_labels[0], x_labels[-1])
@@ -65,7 +70,7 @@ def plot_measures(
         plt.legend(
             sorted(df[category].unique()), bbox_to_anchor=(1.04, 1), loc="upper left"
         )
-    
+
     plt.vlines(
         x=[pd.to_datetime("2020-03-01")],
         ymin=0,
