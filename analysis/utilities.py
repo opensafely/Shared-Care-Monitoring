@@ -28,7 +28,13 @@ def plot_measures(
         as_bar: Boolean indicating if bar chart should be plotted instead of line chart. Only valid if no categories.
         category: Name of column indicating different categories
     """
-    plt.figure(figsize=(15, 8))
+    
+    #plt.figure(figsize=(15, 8))
+    fig = plt.figure(figsize=(15, 8))
+
+    ax = fig.add_axes([0.05, 0.1, 0.75, 0.8])
+    ax.set_xticklabels(['Dec19','Jan20','Feb20','Mar20'])   #will need to add remaining months when date range expands
+    
     
     df = df.sort_values(by="date")
     #mask nan values (redacted)
@@ -50,7 +56,7 @@ def plot_measures(
 
     x_labels = sorted(df["date"].unique())
     plt.ylabel(y_label)
-    plt.xlabel("Date")
+    plt.xlabel("Time Period")
     plt.xticks(x_labels, rotation="vertical")
     plt.title(title)
     plt.xlim(x_labels[0], x_labels[-1])
@@ -65,7 +71,7 @@ def plot_measures(
         plt.legend(
             sorted(df[category].unique()), bbox_to_anchor=(1.04, 1), loc="upper left"
         )
-    
+
     plt.vlines(
         x=[pd.to_datetime("2020-03-01")],
         ymin=0,
