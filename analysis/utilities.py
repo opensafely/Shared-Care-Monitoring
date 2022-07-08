@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from pathlib import Path
+import matplotlib.dates as mdates
 
 BASE_DIR = Path(__file__).parents[1]
 OUTPUT_DIR = BASE_DIR / "output"
@@ -29,12 +30,10 @@ def plot_measures(
         category: Name of column indicating different categories
     """
     
-    #plt.figure(figsize=(15, 8))
-    fig = plt.figure(figsize=(15, 8))
-
-    ax = fig.add_axes([0.05, 0.1, 0.75, 0.8])
-    ax.set_xticklabels(['Dec19','Jan20','Feb20','Mar20'])   #will need to add remaining months when date range expands
+    plt.figure(figsize=(15, 8))
     
+    dtFmt = mdates.DateFormatter('%b-%Y') # define the date formatting
+    plt.gca().xaxis.set_major_formatter(dtFmt) 
     
     df = df.sort_values(by="date")
     #mask nan values (redacted)
