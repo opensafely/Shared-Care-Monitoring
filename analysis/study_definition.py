@@ -10,8 +10,8 @@ from cohortextractor import (
 
 from codelists import *
 
-start_date = "2019-11-01"   #will be 2019-12-01 to 2021-12-01 in final data
-end_date = "2020-03-01"
+start_date = "2020-02-01"   #will be 2020-01-01 to 2022-01-01 in final data  (Nov19 to Nov21) or consider 3y period between 2019-07-01 to 2022-07-01 (Jun19 to Jun22)
+end_date = "2020-06-01"
 
 study = StudyDefinition(
     index_date=start_date,
@@ -28,6 +28,7 @@ study = StudyDefinition(
        (age_band != "missing") AND 
        (sex = 'M' OR sex = 'F') AND
        (imd != "0") AND
+       (rural_urban != -1) AND
        (
         (on_methotrexate) OR
         (on_leflunomide) OR
@@ -193,7 +194,7 @@ study = StudyDefinition(
         returning = "rural_urban_classification",
         return_expectations = {
             "rate": "universal",
-            "category": {"ratios": {1: 0.125, 2: 0.125, 3: 0.125, 4: 0.125, 5: 0.125, 6: 0.125, 7: 0.125, 8: 0.125}},
+            "category": {"ratios": {-1: 0.04, 1: 0.12, 2: 0.12, 3: 0.12, 4: 0.12, 5: 0.12, 6: 0.12, 7: 0.12, 8: 0.12}},
             "incidence": 1,
         },
     ),
@@ -291,7 +292,9 @@ study = StudyDefinition(
     on_methotrexate=patients.satisfying(
         """
             methotrexate_3months AND
-            methotrexate_3to6months
+            methotrexate_3to6months AND
+            NOT leflunomide_3months AND
+            NOT azathioprine_3months
         """,
     ),
     
@@ -299,7 +302,9 @@ study = StudyDefinition(
     on_leflunomide=patients.satisfying(
         """
             leflunomide_3months AND
-            leflunomide_3to6months
+            leflunomide_3to6months AND
+            NOT methotrexate_3months AND
+            NOT azathioprine_3months
         """,
     ),
     
@@ -307,7 +312,9 @@ study = StudyDefinition(
     on_azathioprine=patients.satisfying(
         """
             azathioprine_3months AND
-            azathioprine_3to6months
+            azathioprine_3to6months AND
+            NOT methotrexate_3months AND
+            NOT leflunomide_3months
         """,
     ), 
     

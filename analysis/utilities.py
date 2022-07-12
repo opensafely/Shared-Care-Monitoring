@@ -32,12 +32,16 @@ def plot_measures(
     
     plt.figure(figsize=(15, 8))
     
-    dtFmt = mdates.DateFormatter('%b-%Y') # define the date formatting
+    # define date formatting
+    dtFmt = mdates.DateFormatter('%b-%Y')
     plt.gca().xaxis.set_major_formatter(dtFmt) 
     
     df = df.sort_values(by="date")
-    #mask nan values (redacted)
+    # mask nan values (redacted)
     mask = np.isfinite(df[column_to_plot])
+    
+    # subtract 1 day from index date to move it into previous month
+    df["modified_date"]=df["date"]-pd.DateOffset(days=1)
     
     if category:
         df = df[df[category].notnull()]
@@ -46,14 +50,14 @@ def plot_measures(
             # subset on category column and sort by date
             df_subset = df[df[category] == unique_category].sort_values("date")
 
-            plt.plot(df_subset["date"][mask], df_subset[column_to_plot][mask], marker='o')
+            plt.plot(df_subset["modified_date"][mask], df_subset[column_to_plot][mask], marker='o')
     else:
         if as_bar:
-            df.plot.bar("date", column_to_plot, legend=False)
+            df.plot.bar("modified_date", column_to_plot, legend=False)
         else:
-            plt.plot(df["date"][mask], df[column_to_plot][mask], marker='o')
+            plt.plot(df["modified_date"][mask], df[column_to_plot][mask], marker='o')
 
-    x_labels = sorted(df["date"].unique())
+    x_labels = sorted(df["modified_date"].unique())
     plt.ylabel(y_label)
     plt.xlabel("Time Period")
     plt.xticks(x_labels, rotation="vertical")
@@ -72,7 +76,7 @@ def plot_measures(
         )
 
     plt.vlines(
-        x=[pd.to_datetime("2020-03-01")],
+        x=[pd.to_datetime("2020-02-29")],
         ymin=0,
         ymax=100,
         colors="orange",
@@ -81,7 +85,7 @@ def plot_measures(
     )
     
     plt.vlines(
-        x=[pd.to_datetime("2020-06-01")],
+        x=[pd.to_datetime("2020-05-31")],
         ymin=0,
         ymax=100,
         colors="green",
