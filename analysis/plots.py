@@ -9,7 +9,7 @@ from utilities import (
     plot_measures,
 )
 
-for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "imdQ5", "learning_disability", "medication", "region", "rural_urban", "serious_mental_illness", "sex", "bp", "fbc", "lft", "u_e"]:
+for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "imdQ5", "learning_disability", "levothyroxine", "medication", "region", "rural_urban", "serious_mental_illness", "sex", "bp", "fbc", "lft", "u_e"]:
 
     if test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "imdQ5", "learning_disability", "medication", "region", "rural_urban", "serious_mental_illness", "sex"]:
 
@@ -65,5 +65,22 @@ for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "im
             category=f"{test}_overdue_num",
         )
         
+        
+    if test in ["levothyroxine"]:
+
+        df = pd.read_csv(
+            OUTPUT_DIR / f"measure_{test}_overdue_rate.csv",
+            parse_dates=["date"],
+        )
+
+        plot_measures(
+            df=df,
+            filename=f"/joined/plot_{test}_overdue_rate",
+            column_to_plot="value",
+            title="",
+            y_label="Missed Monitoring Events per Prescription Issue",
+            as_bar=False,
+            category=f"{test}_overdue_num",
+        )
         
 

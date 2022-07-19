@@ -10,6 +10,12 @@ actions:
      outputs:
        highly_sensitive:
          cohort: output/input_*.csv.gz
+
+  generate_study_population_2:
+     run: cohortextractor:latest generate_cohort --study-definition study_definition_levothyroxine --index-date-range "2020-02-01 to 2020-06-01 by month" --output-format csv.gz
+     outputs:
+       highly_sensitive:
+         cohort: output/input_levo*.csv.gz
        
   generate_study_population_ethnicity:    
     run: cohortextractor:latest generate_cohort --study-definition study_definition_ethnicity --output-format csv.gz
@@ -34,6 +40,13 @@ actions:
      outputs:
        moderately_sensitive:
          measure_csv: output/joined/measure_*_rate.csv
+         
+  generate_measures_levothyroxine:
+     run: cohortextractor:latest generate_measures --study-definition study_definition_levothyroxine --skip-existing --output-dir output
+     needs: [generate_study_population_2]
+     outputs:
+       moderately_sensitive:
+         measure_csv: output/measure_levo*_rate.csv
              
   generate_event_deciles_charts:
      run: >
@@ -57,7 +70,7 @@ actions:
               
   generate_plots:
      run: python:latest python analysis/plots.py
-     needs: [generate_measures]
+     needs: [generate_measures, generate_measures_levothyroxine]
      outputs:
        moderately_sensitive:
          counts: output/joined/plot_*.png
@@ -74,4 +87,4 @@ actions:
      needs: [generate_measures]
      outputs:
        moderately_sensitive:
-         measure_csv: output/joined/*_changes.csv
+         measure_csv: output/joined/changes_*.csv

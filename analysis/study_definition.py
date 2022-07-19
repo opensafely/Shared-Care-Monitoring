@@ -27,7 +27,7 @@ study = StudyDefinition(
        NOT died AND
        (age_band != "missing") AND 
        (sex = 'M' OR sex = 'F') AND
-       (imd != "0") AND
+       (imd != -1) AND
        (rural_urban != -1) AND
        (
         (on_methotrexate) OR
