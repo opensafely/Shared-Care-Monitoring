@@ -6,13 +6,13 @@ expectations:
 actions:
          
   generate_study_population_1:
-     run: cohortextractor:latest generate_cohort --study-definition study_definition --index-date-range "2020-02-01 to 2020-06-01 by month" --output-format csv.gz
+     run: cohortextractor:latest generate_cohort --study-definition study_definition --index-date-range "2020-03-01 to 2020-07-01 by month" --output-format csv.gz
      outputs:
        highly_sensitive:
          cohort: output/input_*.csv.gz
 
   generate_study_population_2:
-     run: cohortextractor:latest generate_cohort --study-definition study_definition_levothyroxine --index-date-range "2020-02-01 to 2020-06-01 by month" --output-format csv.gz
+     run: cohortextractor:latest generate_cohort --study-definition study_definition_levothyroxine --index-date-range "2020-03-01 to 2020-07-01 by month" --output-format csv.gz
      outputs:
        highly_sensitive:
          cohort: output/input_levo*.csv.gz

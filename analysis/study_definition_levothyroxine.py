@@ -10,8 +10,8 @@ from cohortextractor import (
 
 from codelists import *
 
-start_date = "2020-02-01"
-end_date = "2020-06-01"
+start_date = "2020-03-01"
+end_date = "2020-07-01"
 
 study = StudyDefinition(
     index_date=start_date,

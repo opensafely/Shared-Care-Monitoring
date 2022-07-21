@@ -10,8 +10,8 @@ from cohortextractor import (
 
 from codelists import *
 
-start_date = "2020-02-01"   #will be 2020-01-01 to 2022-01-01 in final data  (Nov19 to Nov21) or consider 3y period between 2019-07-01 to 2022-07-01 (Jun19 to Jun22)
-end_date = "2020-06-01"
+start_date = "2020-03-01"   #will be 2020-01-01 to 2022-01-01 in final data  (Nov19 to Nov21) or consider 3y period between 2019-07-01 to 2022-07-01 (Jun19 to Jun22)
+end_date = "2020-07-01"
 
 study = StudyDefinition(
     index_date=start_date,
