@@ -25,6 +25,13 @@ methotrexate_codelist = codelist_from_csv(
     column="dmd_id",
 )
 
+# Levothyroxine
+levothyroxine_codelist = codelist_from_csv(
+    "codelists/opensafely-levothyroxine.csv",
+    system="snomed",
+    column="dmd_id",
+)
+
 
 ## MONITORING PARAMETERS ----
 
@@ -56,6 +63,13 @@ blood_pressure_test_codelist = codelist_from_csv(
     column="code",
 )
 
+# TSH
+thyroid_stimulating_hormone_codelist = codelist_from_csv(
+    "codelists/opensafely-thyroid-stimulating-hormone-tsh-testing.csv",
+    system="snomed",
+    column="code",
+)
+
 
 ## COVARIATES ----
 
@@ -75,9 +89,9 @@ dementia_nhsd_snomed_codes = codelist_from_csv(
 
 # Ethnicity - 6 Grouping
 ethnicity_codes = codelist_from_csv(
-    "codelists/opensafely-ethnicity.csv",
-    system="ctv3",
-    column="Code",
+    "codelists/opensafely-ethnicity-snomed-0removed.csv",
+    system="snomed",
+    column="snomedcode",
     category_column="Grouping_6",
 )
 

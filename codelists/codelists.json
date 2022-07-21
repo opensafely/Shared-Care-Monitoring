@@ -18,6 +18,18 @@
       "downloaded_at": "2022-05-31 13:58:33.991826Z",
       "sha": "0d88edfe37ebb951a6ccc6199ef360c91b188c11"
     },
+    "opensafely-levothyroxine.csv": {
+      "id": "opensafely/levothyroxine/33c99f4d",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/levothyroxine/33c99f4d/",
+      "downloaded_at": "2022-07-18 13:01:46.995906Z",
+      "sha": "38b1c4f4f4981d2ac19aaa21de6b0c8e2de86a54"
+    },
+    "opensafely-thyroid-stimulating-hormone-tsh-testing.csv": {
+      "id": "opensafely/thyroid-stimulating-hormone-tsh-testing/11a1abeb",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/thyroid-stimulating-hormone-tsh-testing/11a1abeb/",
+      "downloaded_at": "2022-07-14 15:20:37.673486Z",
+      "sha": "e7f3090ffa269fb1e3efdd5859c43a70e76efeec"
+    },
     "opensafely-red-blood-cell-rbc-tests.csv": {
       "id": "opensafely/red-blood-cell-rbc-tests/576a859e",
       "url": "https://codelists.opensafely.org/codelist/opensafely/red-blood-cell-rbc-tests/576a859e/",
@@ -48,11 +60,11 @@
       "downloaded_at": "2022-06-10 18:13:34.673901Z",
       "sha": "357b2af4841e574f7d43bfeff143b39cdfed6997"
     },
-    "opensafely-ethnicity.csv": {
-      "id": "opensafely/ethnicity/2020-04-27",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/ethnicity/2020-04-27/",
-      "downloaded_at": "2022-06-12 09:43:24.530144Z",
-      "sha": "3d2f3998b71863a80b24d60f6f4282e14191ae13"
+    "opensafely-ethnicity-snomed-0removed.csv": {
+      "id": "opensafely/ethnicity-snomed-0removed/2e641f61",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/ethnicity-snomed-0removed/2e641f61/",
+      "downloaded_at": "2022-07-18 13:09:13.395742Z",
+      "sha": "8b849b5b785d80306e488d0109640c8c1d2da01b"
     },
     "nhsd-primary-care-domain-refsets-mh_cod.csv": {
       "id": "nhsd-primary-care-domain-refsets/mh_cod/20210127",
