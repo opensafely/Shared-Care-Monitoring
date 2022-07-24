@@ -62,7 +62,6 @@ for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "im
             title="",
             y_label="Missed Monitoring Events per Prescription Issue",
             as_bar=False,
-            category=f"{test}_overdue_num",
         )
         
         
@@ -80,7 +79,4 @@ for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "im
             title="",
             y_label="Missed Monitoring Events per Prescription Issue",
             as_bar=False,
-            category=f"{test}_overdue_num",
         )
-        
-
