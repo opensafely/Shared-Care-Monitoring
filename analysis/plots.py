@@ -42,7 +42,7 @@ for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "im
             filename=f"/joined/plot_all_sc_overdue_monitoring_by_{test}",
             column_to_plot="value",
             title="",
-            y_label="Missed Monitoring Events per Prescription Issue",
+            y_label="Patients Overdue Monitoring",
             as_bar=False,
             category=f"{test}",
         )
@@ -60,7 +60,7 @@ for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "im
             filename=f"/joined/plot_{test}_overdue_rate",
             column_to_plot="value",
             title="",
-            y_label="Missed Monitoring Events per Prescription Issue",
+            y_label="Patients Overdue Monitoring",
             as_bar=False,
         )
         
@@ -77,6 +77,6 @@ for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "im
             filename=f"/joined/plot_{test}_overdue_rate",
             column_to_plot="value",
             title="",
-            y_label="Missed Monitoring Events per Prescription Issue",
+            y_label="Patients Overdue Monitoring",
             as_bar=False,
         )

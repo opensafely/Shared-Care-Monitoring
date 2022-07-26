@@ -47,16 +47,6 @@ actions:
      outputs:
        moderately_sensitive:
          measure_csv: output/measure_levo*_rate.csv
-             
-  generate_event_deciles_charts:
-     run: >
-       deciles-charts:v0.0.30
-         --input-files output/joined/measure_all_sc_overdue_monitoring_rate.csv
-         --output-dir output/joined
-     needs: [generate_measures]
-     outputs:
-       moderately_sensitive:
-         deciles_charts: output/joined/deciles_*_monitoring_rate.*
          
   generate_practice_deciles_charts:
      run: >
