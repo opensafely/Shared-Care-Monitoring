@@ -1,5 +1,6 @@
 import re
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -34,7 +35,8 @@ def plot_measures(
     
     # define date formatting
     dtFmt = mdates.DateFormatter('%b-%Y')
-    plt.gca().xaxis.set_major_formatter(dtFmt) 
+    plt.gca().xaxis.set_major_formatter(dtFmt)
+    plt.gca().yaxis.set_major_formatter(mtick.PercentFormatter(xmax=1.0))
     
     df = df.sort_values(by="date")
     # mask nan values (redacted)
