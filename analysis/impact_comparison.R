@@ -63,12 +63,13 @@ data_measures <-
 
 ## define time periods dates:
 
-period_baseline_start <- date("2019-12-01")
-period_baseline_end <- date("2020-03-01")-1
+#period_baseline_start <- date("2019-12-01")
+#period_baseline_end <- date("2020-03-01")-1
+index_baseline <- date("2020-03-01")-
 
 period_impact_start <- date("2020-03-01")
 period_impact_end <- date("2020-06-01")-1
-
+index_impact <- date("2020-06-01")
 
 ## example of before / after comparison ----
 
@@ -78,8 +79,8 @@ data_test %>%
   mutate(
     # assign months to analysis periods
     period = case_when(
-      date >= period_baseline_start & date<=period_baseline_end ~ "baseline",
-      date >= period_impact_start & date<=period_impact_end ~ "impact",
+      date == index_baseline ~ "baseline",
+      date == index_impact ~ "impact",
       TRUE ~ NA_character_
     ),
     numerator = all_sc_overdue_monitoring_num
