@@ -116,7 +116,8 @@ data_test %>%
 ## example of before/after comparison within groups ----
 data_test <- data_measures$all_sc_overdue_monitoring_by_age_band_rate
 
-data_test %>%
+data_ttest_age_band <-
+  data_test %>%
   mutate(
     # assign months to analysis periods
     period = case_when(
@@ -155,6 +156,13 @@ data_test %>%
   )
 
 
-## example of linear model comparing impact of group on post-impact values ----
+## test of group-specific differences in baseline/impact difference ----
 
-## Not clear what the question means -- to clarify
+data_ttest_age_band %>%
+  ungroup() %>%
+  summarise(
+    # heterogeneity tests
+
+    Q = sum( (1/(std.error^2) ) * (( difference -weighted.mean(difference, 1/(std.error)^2))^2)),
+    p = pchisq(Q, df=n()-1, lower.tail=FALSE),
+  )
