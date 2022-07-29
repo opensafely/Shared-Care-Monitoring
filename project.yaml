@@ -4,20 +4,20 @@ expectations:
   population_size: 1000
 
 actions:
-         
+
   generate_study_population_1:
-     run: cohortextractor:latest generate_cohort --study-definition study_definition --index-date-range "2020-03-01 to 2020-07-01 by month" --output-format csv.gz
+     run: cohortextractor:latest generate_cohort --study-definition study_definition --index-date-range "2019-12-01 to 2020-07-01 by month" --output-format csv.gz
      outputs:
        highly_sensitive:
          cohort: output/input_*.csv.gz
 
   generate_study_population_2:
-     run: cohortextractor:latest generate_cohort --study-definition study_definition_levothyroxine --index-date-range "2020-03-01 to 2020-07-01 by month" --output-format csv.gz
+     run: cohortextractor:latest generate_cohort --study-definition study_definition_levothyroxine --index-date-range "2019-12-01 to 2020-07-01 by month" --output-format csv.gz
      outputs:
        highly_sensitive:
          cohort: output/input_levo*.csv.gz
-       
-  generate_study_population_ethnicity:    
+
+  generate_study_population_ethnicity:
     run: cohortextractor:latest generate_cohort --study-definition study_definition_ethnicity --output-format csv.gz
     outputs:
       highly_sensitive:
@@ -33,21 +33,21 @@ actions:
     outputs:
       highly_sensitive:
         cohort: output/joined/input_20*.csv.gz
-                  
+
   generate_measures:
      run: cohortextractor:latest generate_measures --study-definition study_definition --skip-existing --output-dir output/joined
      needs: [join_cohorts]
      outputs:
        moderately_sensitive:
          measure_csv: output/joined/measure_*_rate.csv
-         
+
   generate_measures_levothyroxine:
      run: cohortextractor:latest generate_measures --study-definition study_definition_levothyroxine --skip-existing --output-dir output
      needs: [generate_study_population_2]
      outputs:
        moderately_sensitive:
          measure_csv: output/measure_levo*_rate.csv
-         
+
   generate_practice_deciles_charts:
      run: >
        deciles-charts:v0.0.30
@@ -57,21 +57,21 @@ actions:
      outputs:
        moderately_sensitive:
          deciles_charts: output/joined/deciles_*_by_practice_rate.*
-              
+
   generate_plots:
      run: python:latest python analysis/plots.py
      needs: [generate_measures, generate_measures_levothyroxine]
      outputs:
        moderately_sensitive:
          counts: output/joined/plot_*.png
-         
+
   calculate_unique_patients:
     run: python:latest python analysis/calculate_unique_patients.py
     needs: [generate_study_population_1, join_cohorts]
     outputs:
       moderately_sensitive:
         text: output/patient_count.csv
-        
+
   calculate_rate_changes:
      run: python:latest python analysis/calculate_change.py
      needs: [generate_measures]
