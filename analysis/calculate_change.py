@@ -25,7 +25,7 @@ for measure in measures:
 
     #Output new dataframe with calculated values as a new table
     df.to_csv(
-        OUTPUT_DIR / f"joined/changes_{measure}.csv",
+        OUTPUT_DIR / f"changes_{measure}.csv",
     )
                     
 
@@ -49,5 +49,5 @@ df = pd.DataFrame(feb20tomay20_change_population, columns=['value'])
         
 #Output new dataframe with calculated values as a new table
 df.to_csv(
-    OUTPUT_DIR / f"joined/changes_population.csv", index=False
+    OUTPUT_DIR / f"changes_population.csv", index=False
 )

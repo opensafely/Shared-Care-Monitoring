@@ -52,11 +52,11 @@ actions:
      run: >
        deciles-charts:v0.0.30
          --input-files output/joined/measure_all_sc_overdue_monitoring_by_practice_rate.csv
-         --output-dir output/joined
+         --output-dir output
      needs: [generate_measures]
      outputs:
        moderately_sensitive:
-         deciles_charts: output/joined/deciles_*_by_practice_rate.*
+         deciles_charts: output/deciles_*_by_practice_rate.*
               
   generate_plots:
      run: python:latest python analysis/plots.py
@@ -77,4 +77,4 @@ actions:
      needs: [generate_measures]
      outputs:
        moderately_sensitive:
-         measure_csv: output/joined/changes_*.csv
+         measure_csv: output/changes_*.csv
