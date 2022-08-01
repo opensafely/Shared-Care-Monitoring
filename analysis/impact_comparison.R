@@ -107,6 +107,9 @@ data_test %>%
 
     #Output new dataframe with calculated values as a new table
     write.table(df, file="population_t_test.csv", row.names=F, sep=",")
+
+    #Would prefer to output to specific folder, but haven't found a way to do this yet e.g...
+    #write.table(df, file="/output/analysis/population_t_test.csv", row.names=F, sep=",")
   )
 
 
@@ -153,13 +156,14 @@ data_ttest_age_band <-
     difference.ul = difference + qnorm(0.975)*std.error,
 
   )
+  write.table(data_ttest_age_band, file="age_band_t_test.csv", row.names=F, sep=",")
 
 ## Test AGE group-specific differences in baseline/impact difference ----
 data_ttest_age_band %>%
   ungroup() %>%
   summarise(
     # heterogeneity tests
-    Q = sum((1/(std.error^2) ) * (( difference -weighted.mean(difference, 1/(std.error)^2))^2)),
+    Q = sum((1/(std.error^2)) * ((difference - weighted.mean(difference, 1/(std.error)^2))^2)),
     p = pchisq(Q, df=n()-1, lower.tail=FALSE),
 
     #Create new dataframe which contains calculated values
@@ -167,5 +171,4 @@ data_ttest_age_band %>%
 
     #Output new dataframe with calculated values as a new table
     write.table(df_age_chi, file="age_band_chi_squared.csv", row.names=F, sep=","),
-
   )

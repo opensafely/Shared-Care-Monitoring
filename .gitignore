@@ -9,3 +9,6 @@ venv/
 .DS_Store
 .Rhistory
 .Rproj.user/
+age_band_chi_squared.csv
+age_band_t_test.csv
+population_t_test.csv

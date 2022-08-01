@@ -85,4 +85,5 @@ actions:
     outputs: 
       moderately_sensitive:
         txt1: population_t_test.csv
-        txt2: age_band_chi_squared.csv
+        txt2: age_band_t_test.csv
+        txt3: age_band_chi_squared.csv
