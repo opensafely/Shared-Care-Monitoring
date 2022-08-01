@@ -106,10 +106,9 @@ data_test %>%
     df <- data.frame(value_impact, value_baseline, difference, test.stat, p.value, difference.ll, difference.ul),
 
     #Output new dataframe with calculated values as a new table
-    write.table(df, file="population_t_test.csv", row.names=F, sep=",")
+    write_csv(x = df,
+              path = paste0(analysis_dir, "/population_t_test.csv"))
 
-    #Would prefer to output to specific folder, but haven't found a way to do this yet e.g...
-    #write.table(df, file="/output/analysis/population_t_test.csv", row.names=F, sep=",")
   )
 
 
@@ -156,7 +155,8 @@ data_ttest_age_band <-
     difference.ul = difference + qnorm(0.975)*std.error,
 
   )
-  write.table(data_ttest_age_band, file="age_band_t_test.csv", row.names=F, sep=",")
+  write_csv(x = data_ttest_age_band,
+            path = paste0(analysis_dir, "/age_band_t_test.csv"))
 
 ## Test AGE group-specific differences in baseline/impact difference ----
 data_ttest_age_band %>%
@@ -170,5 +170,6 @@ data_ttest_age_band %>%
     df_age_chi <- data.frame(Q, p),
 
     #Output new dataframe with calculated values as a new table
-    write.table(df_age_chi, file="age_band_chi_squared.csv", row.names=F, sep=","),
+    write_csv(x = df_age_chi,
+              path = paste0(analysis_dir, "/age_band_chi_squared.csv"))
   )
