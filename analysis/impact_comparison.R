@@ -113,10 +113,18 @@ data_test %>%
 
 ### T - TESTS FOR SUBGROUPS
 
-###Loop from list of measures not working
+###Loop over list of measures - NOT WORKING
+
+# define list of measures
 #measures <- list("age_band")
-#for (measure in measures) {
-#  data_test <- paste0("data_measures$measure_all_sc_overdue_monitoring_by_", measure, "_rate")
+
+# create empty new list for loop
+#data_test <- list()
+
+#for (measure in seq_along(measures)) {
+
+#  data_test[measure] <- paste0("data_measures$measure_all_sc_overdue_monitoring_by_", measures[measure], "_rate")
+
 #}
 
 ## Before / After comparison for AGE BANDS -----
