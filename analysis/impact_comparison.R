@@ -62,8 +62,7 @@ data_measures <-
 index_baseline <- date("2020-03-01")
 index_impact <- date("2020-06-01")
 
-
-## Before / After comparison for POPULATION -----
+### T - TEST FOR POPULATION
 data_test <- data_measures$measure_all_sc_overdue_monitoring_rate
 
 data_test %>%
@@ -105,13 +104,20 @@ data_test %>%
     #Create new dataframe which contains calculated values
     df <- data.frame(value_impact, value_baseline, difference, test.stat, p.value, difference.ll, difference.ul),
 
-    #Output new dataframe with calculated values as a new table
+    #Output new dataframe with calculated values as CSV
     write_csv(x = df,
               path = paste0(analysis_dir, "/population_t_test.csv"))
 
   )
 
 
+### T - TESTS FOR SUBGROUPS
+
+###Loop from list of measures not working
+#measures <- list("age_band")
+#for (measure in measures) {
+#  data_test <- paste0("data_measures$measure_all_sc_overdue_monitoring_by_", measure, "_rate")
+#}
 
 ## Before / After comparison for AGE BANDS -----
 data_test <- data_measures$measure_all_sc_overdue_monitoring_by_age_band_rate
@@ -156,9 +162,60 @@ data_ttest_age_band <-
 
   )
   write_csv(x = data_ttest_age_band,
-            path = paste0(analysis_dir, "/age_band_t_test.csv"))
+            path = paste0(analysis_dir, "/subgroup_t_test.csv"),
+            append = TRUE)
 
-## Test AGE group-specific differences in baseline/impact difference ----
+
+## Before / After comparison for ETHNICITIES -----
+data_test <- data_measures$measure_all_sc_overdue_monitoring_by_ethnicity_rate
+
+data_ttest_ethnicity <-
+  data_test %>%
+  mutate(
+    # assign months to analysis periods
+    period = case_when(
+      date == index_baseline ~ "baseline",
+      date == index_impact ~ "impact",
+      TRUE ~ NA_character_
+    ),
+    numerator = all_sc_overdue_monitoring_num
+  ) %>%
+  # remove if date is not in comparison period
+  filter(!is.na(period)) %>%
+  # aggregate data within periods
+  group_by(measure_name, ethnicity, period) %>%
+  summarise(
+    population = sum(population),
+    numerator  = sum(numerator ),
+    value = numerator/population
+  ) %>%
+  pivot_wider(
+    id_cols = c("measure_name", "ethnicity"),
+    names_from = period,
+    values_from = c("population", "numerator", "value")
+  ) %>%
+  mutate(
+    difference = value_impact - value_baseline,
+    std.error_baseline = sqrt( (value_baseline*(1-value_baseline))/population_baseline),
+    std.error_impact = sqrt( (value_impact*(1-value_impact))/population_impact),
+
+    std.error = sqrt((std.error_baseline^2) + (std.error_impact^2)),
+    test.stat = difference/std.error,
+
+    p.value = pchisq(test.stat^2, df=1, lower.tail=FALSE),
+
+    difference.ll = difference + qnorm(0.025)*std.error,
+    difference.ul = difference + qnorm(0.975)*std.error,
+
+  )
+  write_csv(x = data_ttest_ethnicity,
+            path = paste0(analysis_dir, "/subgroup_t_test.csv"),
+            append = TRUE)
+
+
+### HETEROGENEITY TESTING FOR SUBGROUPS -----
+
+## Test AGE group-specific differences in baseline/impact difference -----
 data_ttest_age_band %>%
   ungroup() %>%
   summarise(
@@ -169,7 +226,23 @@ data_ttest_age_band %>%
     #Create new dataframe which contains calculated values
     df_age_chi <- data.frame(Q, p),
 
-    #Output new dataframe with calculated values as a new table
+    #Output new dataframe with calculated values as CSV
     write_csv(x = df_age_chi,
-              path = paste0(analysis_dir, "/age_band_chi_squared.csv"))
+              path = paste0(analysis_dir, "/age_band_heterogeneity.csv"))
+  )
+
+## Test ETHNICITY group-specific differences in baseline/impact difference -----
+data_ttest_ethnicity %>%
+  ungroup() %>%
+  summarise(
+    # heterogeneity tests
+    Q = sum((1/(std.error^2)) * ((difference - weighted.mean(difference, 1/(std.error)^2))^2)),
+    p = pchisq(Q, df=n()-1, lower.tail=FALSE),
+
+    #Create new dataframe which contains calculated values
+    df_ethnicity_chi <- data.frame(Q, p),
+
+    #Output new dataframe with calculated values as CSV
+    write_csv(x = df_ethnicity_chi,
+              path = paste0(analysis_dir, "/ethnicity_heterogeneity.csv"))
   )

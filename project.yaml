@@ -85,5 +85,6 @@ actions:
     outputs: 
       moderately_sensitive:
         txt1: output/analysis/population_t_test.csv
-        txt2: output/analysis/age_band_t_test.csv
-        txt3: output/analysis/age_band_chi_squared.csv
+        txt2: output/analysis/subgroup_t_test.csv
+        txt3: output/analysis/age_band_heterogeneity.csv
+        txt4: output/analysis/ethnicity_heterogeneity.csv
