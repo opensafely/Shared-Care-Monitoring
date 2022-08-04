@@ -1,18 +1,12 @@
 ######################################
 # Import measures data
-
 ######################################
 
-
 # Preliminaries ----
-
 ## Import libraries ----
 library('tidyverse')
 library('lubridate')
 library('here')
-
-
-
 
 ## define input/output directories ----
 
@@ -62,6 +56,34 @@ data_measures <-
 index_baseline <- date("2020-03-01")
 index_impact <- date("2020-06-01")
 
+
+
+# Only include data that we need for ttests
+
+measures_ttest <- c("measure_all_sc_overdue_monitoring_by_age_band_rate"
+                    "measure_all_sc_overdue_monitoring_by_care_home_rate",
+                    "measure_all_sc_overdue_monitoring_by_dementia_rate",
+                    "measure_all_sc_overdue_monitoring_by_ethnicity_rate",
+                    "measure_all_sc_overdue_monitoring_by_housebound_rate",
+                    "measure_all_sc_overdue_monitoring_by_imdQ5_rate",
+                    "measure_all_sc_overdue_monitoring_by_learning_disability_rate",
+                    "measure_all_sc_overdue_monitoring_by_medication_rate",
+                    "measure_all_sc_overdue_monitoring_by_region_rate",
+                    "measure_all_sc_overdue_monitoring_by_rural_urban_rate",
+                    "measure_all_sc_overdue_monitoring_by_serious_mental_illness_rate",
+                    "measure_all_sc_overdue_monitoring_by_sex_rate"
+                    )
+
+
+for (data_name in measures_ttest) {
+  data_measures[[data_name]]
+}
+
+
+
+# We need to filter data_measures list to only include the files specified in measures_ttest
+
+
 ### T - TEST FOR POPULATION
 data_test <- data_measures$measure_all_sc_overdue_monitoring_rate
 
@@ -99,16 +121,14 @@ data_test %>%
     p.value = pchisq(test.stat^2, df=1, lower.tail=FALSE),
 
     difference.ll = difference + qnorm(0.025)*std.error,
-    difference.ul = difference + qnorm(0.975)*std.error,
+    difference.ul = difference + qnorm(0.975)*std.error)
 
     #Create new dataframe which contains calculated values
-    df <- data.frame(value_impact, value_baseline, difference, test.stat, p.value, difference.ll, difference.ul),
+    # df <- data.frame(value_impact, value_baseline, difference, test.stat, p.value, difference.ll, difference.ul),
 
     #Output new dataframe with calculated values as CSV
-    write_csv(x = df,
-              path = paste0(analysis_dir, "/population_t_test.csv"))
-
-  )
+    # write_csv(x = df,
+    #           path = paste0(analysis_dir, "/population_t_test.csv"))
 
 
 ### T - TESTS FOR SUBGROUPS
@@ -169,9 +189,10 @@ data_ttest_age_band <-
     difference.ul = difference + qnorm(0.975)*std.error,
 
   )
-  write_csv(x = data_ttest_age_band,
-            path = paste0(analysis_dir, "/subgroup_t_test.csv"),
-            append = TRUE)
+
+write_csv(x = data_ttest_age_band,
+          path = paste0(analysis_dir, "/subgroup_t_test.csv"),
+          append = TRUE)
 
 
 ## Before / After comparison for ETHNICITIES -----
@@ -216,41 +237,23 @@ data_ttest_ethnicity <-
     difference.ul = difference + qnorm(0.975)*std.error,
 
   )
-  write_csv(x = data_ttest_ethnicity,
-            path = paste0(analysis_dir, "/subgroup_t_test.csv"),
-            append = TRUE)
+
+write_csv(x = data_ttest_ethnicity,
+          path = paste0(analysis_dir, "/subgroup_t_test.csv"),
+          append = TRUE)
 
 
 ### HETEROGENEITY TESTING FOR SUBGROUPS -----
 
 ## Test AGE group-specific differences in baseline/impact difference -----
-data_ttest_age_band %>%
+df_age_chi <- data_ttest_age_band %>%
   ungroup() %>%
   summarise(
     # heterogeneity tests
-    Q = sum((1/(std.error^2)) * ((difference - weighted.mean(difference, 1/(std.error)^2))^2)),
-    p = pchisq(Q, df=n()-1, lower.tail=FALSE),
+    cochrans_q = sum((1/(std.error^2)) * ((difference - weighted.mean(difference, 1/(std.error)^2))^2)),
+    p_value = pchisq(cochrans_q, df = n() - 1, lower.tail = FALSE)
+  ) %>%
+  mutate(measure = "age_band") 
 
-    #Create new dataframe which contains calculated values
-    df_age_chi <- data.frame(Q, p),
-
-    #Output new dataframe with calculated values as CSV
-    write_csv(x = df_age_chi,
-              path = paste0(analysis_dir, "/age_band_heterogeneity.csv"))
-  )
-
-## Test ETHNICITY group-specific differences in baseline/impact difference -----
-data_ttest_ethnicity %>%
-  ungroup() %>%
-  summarise(
-    # heterogeneity tests
-    Q = sum((1/(std.error^2)) * ((difference - weighted.mean(difference, 1/(std.error)^2))^2)),
-    p = pchisq(Q, df=n()-1, lower.tail=FALSE),
-
-    #Create new dataframe which contains calculated values
-    df_ethnicity_chi <- data.frame(Q, p),
-
-    #Output new dataframe with calculated values as CSV
-    write_csv(x = df_ethnicity_chi,
-              path = paste0(analysis_dir, "/ethnicity_heterogeneity.csv"))
-  )
+write_csv(x = df_age_chi,
+          path = here(paste0(analysis_dir, "/age_band_heterogeneity.csv")))
