@@ -10,8 +10,8 @@ from cohortextractor import (
 
 from codelists import *
 
-start_date = "2020-03-01"   #will be 2020-01-01 to 2022-01-01 in final data  (Nov19 to Nov21) or consider 3y period between 2019-07-01 to 2022-07-01 (Jun19 to Jun22)
-end_date = "2020-07-01"
+start_date = "2019-12-01"
+end_date = "2022-08-01"
 
 study = StudyDefinition(
     index_date=start_date,
@@ -37,9 +37,9 @@ study = StudyDefinition(
        """
     ),
     
-    registered=patients.registered_as_of("index_date"),
+    registered=patients.registered_as_of("index_date - 1 day"),
     died=patients.died_from_any_cause(
-        on_or_before="index_date",
+        on_or_before="index_date - 1 day",
         returning="binary_flag",
         return_expectations={"incidence": 0.1},
     ),
@@ -48,7 +48,7 @@ study = StudyDefinition(
     
     # GP Practice
     practice=patients.registered_practice_as_of(
-        "index_date",
+        "index_date - 1 day",
         returning="pseudo_id",
         return_expectations={
             "int": {"distribution": "normal", "mean": 25, "stddev": 5},
@@ -85,7 +85,7 @@ study = StudyDefinition(
         },
     
         age=patients.age_as_of(
-            "index_date",
+            "index_date - 1 day",
             return_expectations={
                 "rate": "universal",
                 "int": {"distribution": "population_ages"},
@@ -95,7 +95,7 @@ study = StudyDefinition(
     
     # Region
     region = patients.registered_practice_as_of(
-        "index_date",
+        "index_date - 1 day",
         returning = "nuts1_region_name",
         return_expectations = {
           "rate": "universal",
@@ -141,7 +141,7 @@ study = StudyDefinition(
     
         housebound_date = patients.with_these_clinical_events( 
             codelist = housebound_opensafely_snomed_codes, 
-            on_or_before = "index_date",
+            on_or_before = "index_date - 1 day",
             find_last_match_in_period = True,
             returning = "date",
             date_format = "YYYY-MM-DD",
@@ -169,7 +169,7 @@ study = StudyDefinition(
             "5": "imd >= 32800*4/5 AND imd <= 32800",
         },
         imd=patients.address_as_of(
-            "index_date",
+            "index_date - 1 day",
             returning="index_of_multiple_deprivation",
             round_to_nearest=100,
         ),
@@ -190,7 +190,7 @@ study = StudyDefinition(
 
     # Rurality Classification
     rural_urban = patients.address_as_of(
-        "index_date",
+        "index_date - 1 day",
         returning = "rural_urban_classification",
         return_expectations = {
             "rate": "universal",
@@ -215,7 +215,7 @@ study = StudyDefinition(
         
         dementia_all = patients.with_these_clinical_events(
             dementia_nhsd_snomed_codes,
-            on_or_before = "index_date",
+            on_or_before = "index_date - 1 day",
             returning = "binary_flag",
             return_expectations = {"incidence": 0.05}
         ),
@@ -224,7 +224,7 @@ study = StudyDefinition(
     # Learning Disability
     learning_disability = patients.with_these_clinical_events(
         learning_disability_codes,
-        on_or_before = "index_date",
+        on_or_before = "index_date - 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.2}
     ),
@@ -232,7 +232,7 @@ study = StudyDefinition(
     # Serious Mental Illness
     serious_mental_illness = patients.with_these_clinical_events(
         serious_mental_illness_codes,
-        on_or_before = "index_date",
+        on_or_before = "index_date - 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.1}
     ),
@@ -245,7 +245,7 @@ study = StudyDefinition(
         codelist=methotrexate_codelist,
         find_last_match_in_period=True,
         returning="binary_flag",
-        between=["index_date - 3 months", "index_date"]
+        between=["index_date - 3 months", "index_date - 1 day"]
     ),
     
     # Leflunomide within 3m
@@ -253,7 +253,7 @@ study = StudyDefinition(
         codelist=leflunomide_codelist,
         find_last_match_in_period=True,
         returning="binary_flag",
-        between=["index_date - 3 months", "index_date"]
+        between=["index_date - 3 months", "index_date - 1 day"]
     ),
     
     # Azathioprine within 3m
@@ -261,7 +261,7 @@ study = StudyDefinition(
         codelist=azathioprine_codelist,
         find_last_match_in_period=True,
         returning="binary_flag",
-        between=["index_date - 3 months", "index_date"]
+        between=["index_date - 3 months", "index_date - 1 day"]
     ),
     
     # Methotrexate within 3-6m
@@ -326,7 +326,7 @@ study = StudyDefinition(
         codelist=full_blood_count_codelist,
         find_last_match_in_period=True,
         returning="binary_flag",
-        between=["index_date - 3 months", "index_date"],
+        between=["index_date - 3 months", "index_date - 1 day"],
     ),
     
     # Liver Function Test
@@ -334,7 +334,7 @@ study = StudyDefinition(
         codelist=liver_function_test_codelist,
         find_last_match_in_period=True,
         returning="binary_flag",
-        between=["index_date - 3 months", "index_date"],
+        between=["index_date - 3 months", "index_date - 1 day"],
     ),
     
     # Urea & Electrolyte Test
@@ -342,7 +342,7 @@ study = StudyDefinition(
         codelist=urea_electrolyte_test_codelist,
         find_last_match_in_period=True,
         returning="binary_flag",
-        between=["index_date - 3 months", "index_date"],
+        between=["index_date - 3 months", "index_date - 1 day"],
     ),
     
     #Blood Pressure Test
@@ -350,7 +350,7 @@ study = StudyDefinition(
         codelist=blood_pressure_test_codelist,
         find_last_match_in_period=True,
         returning="binary_flag",
-        between=["index_date - 3 months", "index_date"],
+        between=["index_date - 3 months", "index_date - 1 day"],
     ),
    
     

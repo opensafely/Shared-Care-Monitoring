@@ -10,8 +10,8 @@ from cohortextractor import (
 
 from codelists import *
 
-start_date = "2020-03-01"
-end_date = "2020-07-01"
+start_date = "2019-12-01"
+end_date = "2022-08-01"
 
 study = StudyDefinition(
     index_date=start_date,
@@ -33,15 +33,15 @@ study = StudyDefinition(
        """
     ),
     
-    registered=patients.registered_as_of("index_date"),
+    registered=patients.registered_as_of("index_date - 1 day"),
     died=patients.died_from_any_cause(
-        on_or_before="index_date",
+        on_or_before="index_date - 1 day",
         returning="binary_flag",
         return_expectations={"incidence": 0.1},
     ),
     
     age=patients.age_as_of(
-        "index_date",
+        "index_date - 1 day",
         return_expectations={
             "rate": "universal",
             "int": {"distribution": "population_ages"},
@@ -64,7 +64,7 @@ study = StudyDefinition(
         codelist=levothyroxine_codelist,
         find_last_match_in_period=True,
         returning="binary_flag",
-        between=["index_date - 3 months", "index_date"]
+        between=["index_date - 3 months", "index_date - 1 day"]
     ),
     
     # Levothyroxine within 3-6m
@@ -91,7 +91,7 @@ study = StudyDefinition(
         codelist=thyroid_stimulating_hormone_codelist,
         find_last_match_in_period=True,
         returning="binary_flag",
-        between=["index_date - 12 months", "index_date"],
+        between=["index_date - 12 months", "index_date - 1 day"],
     ),
 
     

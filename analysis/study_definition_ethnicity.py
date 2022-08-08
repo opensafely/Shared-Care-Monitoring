@@ -2,8 +2,8 @@ from cohortextractor import StudyDefinition, patients
 
 from codelists import *
 
-start_date = "2020-03-01"
-end_date = "2020-07-01"
+start_date = "2019-12-01"
+end_date = "2022-08-01"
 
 study = StudyDefinition(
     index_date=end_date,
@@ -40,7 +40,7 @@ study = StudyDefinition(
                 ethnicity_codes,
                 returning="category",
                 find_last_match_in_period=True,
-                on_or_before="index_date",
+                on_or_before="index_date - 1 day",
                 return_expectations={
                     "category": {"ratios": {"1": 0.4, "2": 0.4, "3": 0.2, "4":0.2,"5": 0.2}},
                     "incidence": 0.75,
