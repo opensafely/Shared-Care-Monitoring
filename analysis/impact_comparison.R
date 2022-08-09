@@ -1,36 +1,36 @@
-######################################
-# Import measures data
-######################################
-
-# Preliminaries ----
-## Import libraries ----
+### IMPORT LIBRARIES ----
 library('tidyverse')
 library('lubridate')
 library('here')
 
-## define input/output directories ----
 
-# where the measures files are stored
+### PRELIMINARY SETUP ----
+
+## Define input/output directories ----
+
+# Where the measures files are stored
 measures_dir <- here("output", "joined")
 
-# where to output the results
+# Where to output the results
 fs::dir_create(here("output", "analysis"))
 analysis_dir <- here("output", "analysis")
 
-# Import measures ----
-# all measure csv files
+
+## Import measures ----
+
+# Import all measure csv files from input directory
 measures_path_all <- fs::dir_ls(path=measures_dir, glob="*.csv", type="file")
 
-# only summary files (exclude files with date suffix) ##this line may not be needed because all the date-specific files are saved elwhere or are csv.gz (not csv) files. But it does no harm
+# Exclude files with date suffix to only capture summary files
 measures_path_summary <- measures_path_all[!str_detect(measures_path_all, "\\_\\d+\\-\\d+\\-\\d+\\.csv$")]
 
-# name of measure
+# Capture name of measure from filename
 measure_name <-
   measures_path_summary %>%
   fs::path_file() %>%
   fs::path_ext_remove()
 
-# import measures data from csv and put each dataset in a list
+# Extract data from measures files and put each dataset in a list
 data_measures <-
   map(
     set_names(measures_path_summary, measure_name),
@@ -49,55 +49,18 @@ data_measures <-
     }
   )
 
-## define time periods dates:
+
+## Define dates for time-periods of interest ----
 index_baseline <- date("2020-03-01")
 index_impact <- date("2020-06-01")
 
-### T - TEST FOR POPULATION
-df_ttest_results_population <- data_measures$measure_all_sc_overdue_monitoring_rate %>%
-  mutate(
-    # assign months to analysis periods
-    period = case_when(
-      date == index_baseline ~ "baseline",
-      date == index_impact ~ "impact",
-      TRUE ~ NA_character_
-    ),
-    numerator = all_sc_overdue_monitoring_num
-  ) %>%
-  # remove if date is not in comparison period
-  filter(!is.na(period)) %>%
-  # aggregate data within periods
-  group_by(measure_name, period) %>%
-  summarise(
-    population = sum(population),
-    numerator  = sum(numerator),
-    value = numerator/population
-  ) %>%
-  pivot_wider(
-    id_cols = c("measure_name"),
-    names_from = period,
-    values_from = c("population", "numerator", "value")
-  ) %>%
-  mutate(
-    difference = value_impact - value_baseline,
-    std.error_baseline = sqrt( (value_baseline*(1-value_baseline))/population_baseline),
-    std.error_impact = sqrt( (value_impact*(1-value_impact))/population_impact),
-    std.error = sqrt((std.error_baseline^2) + (std.error_impact^2)),
-    test.stat = difference/std.error,
 
-    p.value = pchisq(test.stat^2, df=1, lower.tail=FALSE),
+## Prepare dataset for looping through subgroups ----
 
-    difference.ll = difference + qnorm(0.025)*std.error,
-    difference.ul = difference + qnorm(0.975)*std.error) %>%
-    ungroup()
+# Create empty list for dataframes to be used in the loop
+data_ttest <- list()
 
-# Write results
-df_ttest_results_population %>%
-  mutate(measure_name = "population") %>%
-  write_csv(here("output/analysis/measures_population_ttest.csv"))
-
-# Prepare dataset with subgroups for looping
-# Create vector with measure names (only include data that we need for ttests)
+# Create vector with measure names - only including those needed for t-tests
 measures_ttest <- c("measure_all_sc_overdue_monitoring_by_age_band_rate",
                     "measure_all_sc_overdue_monitoring_by_care_home_rate",
                     "measure_all_sc_overdue_monitoring_by_dementia_rate",
@@ -111,30 +74,75 @@ measures_ttest <- c("measure_all_sc_overdue_monitoring_by_age_band_rate",
                     "measure_all_sc_overdue_monitoring_by_serious_mental_illness_rate",
                     "measure_all_sc_overdue_monitoring_by_sex_rate")
 
-# Create empty list for dataframes (we will use this in the loop)
-data_ttest <- list()
-
-# Write for loop that takes only the measures we defined above
+# Create 'for loop' that runs only through the measures defined in vector above
 for (measure_name in measures_ttest) {
   print(measure_name)
   data_ttest[[measure_name]] <- data_measures[[measure_name]]
 }
 
-# Check that the names of the new list only includes the measures we want
+# Check that the names of the new list only includes the desired measures
 names(data_ttest)
 
-# Rename all measure variables to "measures_category" so it's easier to refer
-# to the same variable in a function
+# Rename all measure variables as "measures_category" so it's easier to refer to the same variable in a function
 data_ttest <- data_ttest %>% 
   purrr::map(~ .x %>% rename("measure_category" = 1))
 
-## Before / After comparison for Subgroups -----
-# First, define function
-ttest_measures <- function(df) {
 
+### T - TEST FOR POPULATION
+df_ttest_results_population <- data_measures$measure_all_sc_overdue_monitoring_rate %>%
+  
+  # Assign months to analysis time-periods
+  mutate(
+    period = case_when(
+      date == index_baseline ~ "baseline",
+      date == index_impact ~ "impact",
+      TRUE ~ NA_character_
+    ),
+    numerator = all_sc_overdue_monitoring_num
+  ) %>%
+
+  # Remove if date is not in comparison time-period
+  filter(!is.na(period)) %>%
+
+  # Aggregate data within time-periods
+  group_by(measure_name, period) %>%
+  summarise(
+    population = sum(population),
+    numerator  = sum(numerator),
+    value = numerator/population
+  ) %>%
+  pivot_wider(
+    id_cols = c("measure_name"),
+    names_from = period,
+    values_from = c("population", "numerator", "value")
+  ) %>%
+
+  #Calculate t-test statistic values
+  mutate(
+    difference = value_impact - value_baseline,
+    std.error_baseline = sqrt( (value_baseline*(1-value_baseline))/population_baseline),
+    std.error_impact = sqrt( (value_impact*(1-value_impact))/population_impact),
+    std.error = sqrt((std.error_baseline^2) + (std.error_impact^2)),
+    test.stat = difference/std.error,
+    p.value = pchisq(test.stat^2, df=1, lower.tail=FALSE),
+    difference.ll = difference + qnorm(0.025)*std.error,
+    difference.ul = difference + qnorm(0.975)*std.error) %>%
+
+    ungroup()
+
+# Save results as csv
+df_ttest_results_population %>%
+  mutate(measure_name = "population") %>%
+  write_csv(here("output/analysis/measures_population_ttest.csv"))
+
+
+### T - TEST FOR SUBGROUPS -----
+
+## Define function for t-test calculation----
+ttest_measures <- function(df) {
   df %>%
     mutate(
-      # assign months to analysis periods
+      # Assign months to analysis time-periods
       period = case_when(
         date == index_baseline ~ "baseline",
         date == index_impact ~ "impact",
@@ -142,9 +150,11 @@ ttest_measures <- function(df) {
       ),
       numerator = all_sc_overdue_monitoring_num
     ) %>%
-    # remove if date is not in comparison period
+
+    # Remove if date is not in comparison time-period
     filter(!is.na(period)) %>%
-    # aggregate data within periods
+
+    # Aggregate data within periods
     group_by(measure_name, measure_category, period) %>%
     summarise(
       population = sum(population),
@@ -156,41 +166,49 @@ ttest_measures <- function(df) {
       names_from = period,
       values_from = c("population", "numerator", "value")
     ) %>%
+
+    #Calculate t-test statistic values
     mutate(
       difference = value_impact - value_baseline,
       std.error_baseline = sqrt((value_baseline * (1 - value_baseline)) / population_baseline),
       std.error_impact = sqrt((value_impact * (1 - value_impact)) / population_impact),
-
       std.error = sqrt((std.error_baseline^2) + (std.error_impact^2)),
       test.stat = difference / std.error,
-
       p.value = pchisq(test.stat^2, df = 1, lower.tail = FALSE),
-
       difference.ll = difference + qnorm(0.025) * std.error,
       difference.ul = difference + qnorm(0.975) * std.error
       ) %>%
+
       ungroup() %>%
       mutate(measure_category = as.character(measure_category))
 }
 
-# Apply ttest function to every element in the list and return ONE dataframe
+## Apply t-test function to every element in the list and return ONE dataframe ----
 data_ttest_results <- data_ttest %>% 
   purrr::map_dfr(~ .x %>% ttest_measures())
 
+
 ### HETEROGENEITY TESTING FOR SUBGROUPS -----
 
-## Test AGE group-specific differences in baseline/impact difference -----
+## Test subgroup-specific differences for change in monitoring rate between baseline/impact time-periods -----
 data_heterogenity_results <- data_ttest_results %>%
+
+  # Aggregate data within subgroups
   group_by(measure_name) %>%
+
+  # Calculate heterogeneity statistic values
   summarise(
-    # heterogeneity tests
     cochrans_q = sum((1 / (std.error^2)) * ((difference - weighted.mean(difference, 1 / (std.error)^2))^2)),
     p_value = pchisq(cochrans_q, df = n() - 1, lower.tail = FALSE)
   )
 
-# Join results and wirte csv file
+## Output Results ----
 data_ttest_results %>%
+
+  #Join heterogeneity results with t-test results
   left_join(data_heterogenity_results, by = "measure_name") %>%
   mutate(measure_name = str_replace(measure_name, "measure_all_sc_overdue_monitoring_by_", ""),
          measure_name = str_replace(measure_name, "_rate", "")) %>%
+  
+  #Save joined output as csv
   write_csv(here("output/analysis/measures_subgroup_ttest_heterogeneity.csv"))
