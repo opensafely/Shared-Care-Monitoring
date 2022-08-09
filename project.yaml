@@ -78,3 +78,11 @@ actions:
      outputs:
        moderately_sensitive:
          measure_csv: output/changes_*.csv
+
+  perform_inferential_stats:
+    run: r:latest analysis/impact_comparison.R
+    needs: [generate_measures]
+    outputs: 
+      moderately_sensitive:
+        results_population: output/analysis/measures_population_ttest.csv
+        results_subgroups: output/analysis/measures_subgroup_ttest_heterogeneity.csv
