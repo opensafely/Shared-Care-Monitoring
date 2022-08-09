@@ -84,7 +84,5 @@ actions:
     needs: [generate_measures]
     outputs: 
       moderately_sensitive:
-        txt1: output/analysis/population_t_test.csv
-        txt2: output/analysis/subgroup_t_test.csv
-        txt3: output/analysis/age_band_heterogeneity.csv
-        txt4: output/analysis/ethnicity_heterogeneity.csv
+        results_population: output/analysis/measures_population_ttest.csv
+        results_subgroups: output/analysis/measures_subgroup_ttest_heterogeneity.csv

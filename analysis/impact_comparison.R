@@ -49,15 +49,12 @@ data_measures <-
     }
   )
 
-
 ## define time periods dates:
 index_baseline <- date("2020-03-01")
 index_impact <- date("2020-06-01")
 
 ### T - TEST FOR POPULATION
-data_test <- data_measures$measure_all_sc_overdue_monitoring_rate
-
-data_test %>%
+df_ttest_results_population <- data_measures$measure_all_sc_overdue_monitoring_rate %>%
   mutate(
     # assign months to analysis periods
     period = case_when(
@@ -94,6 +91,10 @@ data_test %>%
     difference.ul = difference + qnorm(0.975)*std.error) %>%
     ungroup()
 
+# Write results
+df_ttest_results_population %>%
+  mutate(measure_name = "population") %>%
+  write_csv(here("output/analysis/measures_population_ttest.csv"))
 
 # Prepare dataset with subgroups for looping
 # Create vector with measure names (only include data that we need for ttests)
@@ -115,18 +116,20 @@ data_ttest <- list()
 
 # Write for loop that takes only the measures we defined above
 for (measure_name in measures_ttest) {
+  print(measure_name)
   data_ttest[[measure_name]] <- data_measures[[measure_name]]
 }
 
 # Check that the names of the new list only includes the measures we want
 names(data_ttest)
 
-# Rename all measue variables to "measures_category" so it's easier to refer
+# Rename all measure variables to "measures_category" so it's easier to refer
 # to the same variable in a function
 data_ttest <- data_ttest %>% 
   purrr::map(~ .x %>% rename("measure_category" = 1))
 
-## Before / After comparison for AGE BANDS -----
+## Before / After comparison for Subgroups -----
+# First, define function
 ttest_measures <- function(df) {
 
   df %>%
@@ -170,14 +173,7 @@ ttest_measures <- function(df) {
       mutate(measure_category = as.character(measure_category))
 }
 
-
-df_ttest_age_band <- ttest_measures(data_ttest[["measure_all_sc_overdue_monitoring_by_age_band_rate"]])
-ttest_measures(data_ttest[["measure_all_sc_overdue_monitoring_by_ethnicity_rate"]])
-ttest_measures(data_ttest[["measure_all_sc_overdue_monitoring_by_sex_rate"]])
-ttest_measures(data_ttest[["measure_all_sc_overdue_monitoring_by_learning_disability_rate"]])
-ttest_measures(data_ttest[["measure_all_sc_overdue_monitoring_by_imdQ5_rate"]])
-
-
+# Apply ttest function to every element in the list and return ONE dataframe
 data_ttest_results <- data_ttest %>% 
   purrr::map_dfr(~ .x %>% ttest_measures())
 
@@ -192,6 +188,9 @@ data_heterogenity_results <- data_ttest_results %>%
     p_value = pchisq(cochrans_q, df = n() - 1, lower.tail = FALSE)
   )
 
+# Join results and wirte csv file
 data_ttest_results %>%
   left_join(data_heterogenity_results, by = "measure_name") %>%
+  mutate(measure_name = str_replace(measure_name, "measure_all_sc_overdue_monitoring_by_", ""),
+         measure_name = str_replace(measure_name, "_rate", "")) %>%
   write_csv(here("output/analysis/measures_subgroup_ttest_heterogeneity.csv"))
