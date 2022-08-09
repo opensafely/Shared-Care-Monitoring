@@ -90,7 +90,6 @@ data_ttest <- data_ttest %>%
 
 ### T - TEST FOR POPULATION
 df_ttest_results_population <- data_measures$measure_all_sc_overdue_monitoring_rate %>%
-  
   # Assign months to analysis time-periods
   mutate(
     period = case_when(
@@ -100,10 +99,8 @@ df_ttest_results_population <- data_measures$measure_all_sc_overdue_monitoring_r
     ),
     numerator = all_sc_overdue_monitoring_num
   ) %>%
-
   # Remove if date is not in comparison time-period
   filter(!is.na(period)) %>%
-
   # Aggregate data within time-periods
   group_by(measure_name, period) %>%
   summarise(
@@ -116,7 +113,6 @@ df_ttest_results_population <- data_measures$measure_all_sc_overdue_monitoring_r
     names_from = period,
     values_from = c("population", "numerator", "value")
   ) %>%
-
   #Calculate t-test statistic values
   mutate(
     difference = value_impact - value_baseline,
@@ -127,9 +123,7 @@ df_ttest_results_population <- data_measures$measure_all_sc_overdue_monitoring_r
     p.value = pchisq(test.stat^2, df=1, lower.tail=FALSE),
     difference.ll = difference + qnorm(0.025)*std.error,
     difference.ul = difference + qnorm(0.975)*std.error) %>%
-
     ungroup()
-
 # Save results as csv
 df_ttest_results_population %>%
   mutate(measure_name = "population") %>%
@@ -150,10 +144,8 @@ ttest_measures <- function(df) {
       ),
       numerator = all_sc_overdue_monitoring_num
     ) %>%
-
     # Remove if date is not in comparison time-period
     filter(!is.na(period)) %>%
-
     # Aggregate data within periods
     group_by(measure_name, measure_category, period) %>%
     summarise(
@@ -166,7 +158,6 @@ ttest_measures <- function(df) {
       names_from = period,
       values_from = c("population", "numerator", "value")
     ) %>%
-
     #Calculate t-test statistic values
     mutate(
       difference = value_impact - value_baseline,
@@ -178,7 +169,6 @@ ttest_measures <- function(df) {
       difference.ll = difference + qnorm(0.025) * std.error,
       difference.ul = difference + qnorm(0.975) * std.error
       ) %>%
-
       ungroup() %>%
       mutate(measure_category = as.character(measure_category))
 }
@@ -192,10 +182,8 @@ data_ttest_results <- data_ttest %>%
 
 ## Test subgroup-specific differences for change in monitoring rate between baseline/impact time-periods -----
 data_heterogenity_results <- data_ttest_results %>%
-
   # Aggregate data within subgroups
   group_by(measure_name) %>%
-
   # Calculate heterogeneity statistic values
   summarise(
     cochrans_q = sum((1 / (std.error^2)) * ((difference - weighted.mean(difference, 1 / (std.error)^2))^2)),
@@ -204,11 +192,9 @@ data_heterogenity_results <- data_ttest_results %>%
 
 ## Output Results ----
 data_ttest_results %>%
-
   #Join heterogeneity results with t-test results
   left_join(data_heterogenity_results, by = "measure_name") %>%
   mutate(measure_name = str_replace(measure_name, "measure_all_sc_overdue_monitoring_by_", ""),
          measure_name = str_replace(measure_name, "_rate", "")) %>%
-  
   #Save joined output as csv
   write_csv(here("output/analysis/measures_subgroup_ttest_heterogeneity.csv"))
