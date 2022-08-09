@@ -17,9 +17,7 @@ measures_dir <- here("output", "joined")
 fs::dir_create(here("output", "analysis"))
 analysis_dir <- here("output", "analysis")
 
-
 # Import measures ----
-
 # all measure csv files
 measures_path_all <- fs::dir_ls(path=measures_dir, glob="*.csv", type="file")
 
@@ -55,34 +53,6 @@ data_measures <-
 ## define time periods dates:
 index_baseline <- date("2020-03-01")
 index_impact <- date("2020-06-01")
-
-
-
-# Only include data that we need for ttests
-
-measures_ttest <- c("measure_all_sc_overdue_monitoring_by_age_band_rate"
-                    "measure_all_sc_overdue_monitoring_by_care_home_rate",
-                    "measure_all_sc_overdue_monitoring_by_dementia_rate",
-                    "measure_all_sc_overdue_monitoring_by_ethnicity_rate",
-                    "measure_all_sc_overdue_monitoring_by_housebound_rate",
-                    "measure_all_sc_overdue_monitoring_by_imdQ5_rate",
-                    "measure_all_sc_overdue_monitoring_by_learning_disability_rate",
-                    "measure_all_sc_overdue_monitoring_by_medication_rate",
-                    "measure_all_sc_overdue_monitoring_by_region_rate",
-                    "measure_all_sc_overdue_monitoring_by_rural_urban_rate",
-                    "measure_all_sc_overdue_monitoring_by_serious_mental_illness_rate",
-                    "measure_all_sc_overdue_monitoring_by_sex_rate"
-                    )
-
-
-for (data_name in measures_ttest) {
-  data_measures[[data_name]]
-}
-
-
-
-# We need to filter data_measures list to only include the files specified in measures_ttest
-
 
 ### T - TEST FOR POPULATION
 data_test <- data_measures$measure_all_sc_overdue_monitoring_rate
@@ -121,139 +91,107 @@ data_test %>%
     p.value = pchisq(test.stat^2, df=1, lower.tail=FALSE),
 
     difference.ll = difference + qnorm(0.025)*std.error,
-    difference.ul = difference + qnorm(0.975)*std.error)
-
-    #Create new dataframe which contains calculated values
-    # df <- data.frame(value_impact, value_baseline, difference, test.stat, p.value, difference.ll, difference.ul),
-
-    #Output new dataframe with calculated values as CSV
-    # write_csv(x = df,
-    #           path = paste0(analysis_dir, "/population_t_test.csv"))
+    difference.ul = difference + qnorm(0.975)*std.error) %>%
+    ungroup()
 
 
-### T - TESTS FOR SUBGROUPS
+# Prepare dataset with subgroups for looping
+# Create vector with measure names (only include data that we need for ttests)
+measures_ttest <- c("measure_all_sc_overdue_monitoring_by_age_band_rate",
+                    "measure_all_sc_overdue_monitoring_by_care_home_rate",
+                    "measure_all_sc_overdue_monitoring_by_dementia_rate",
+                    "measure_all_sc_overdue_monitoring_by_ethnicity_rate",
+                    "measure_all_sc_overdue_monitoring_by_housebound_rate",
+                    "measure_all_sc_overdue_monitoring_by_imdQ5_rate",
+                    "measure_all_sc_overdue_monitoring_by_learning_disability_rate",
+                    "measure_all_sc_overdue_monitoring_by_medication_rate",
+                    "measure_all_sc_overdue_monitoring_by_region_rate",
+                    "measure_all_sc_overdue_monitoring_by_rural_urban_rate",
+                    "measure_all_sc_overdue_monitoring_by_serious_mental_illness_rate",
+                    "measure_all_sc_overdue_monitoring_by_sex_rate")
 
-###Loop over list of measures - NOT WORKING
+# Create empty list for dataframes (we will use this in the loop)
+data_ttest <- list()
 
-# define list of measures
-#measures <- list("age_band")
+# Write for loop that takes only the measures we defined above
+for (measure_name in measures_ttest) {
+  data_ttest[[measure_name]] <- data_measures[[measure_name]]
+}
 
-# create empty new list for loop
-#data_test <- list()
+# Check that the names of the new list only includes the measures we want
+names(data_ttest)
 
-#for (measure in seq_along(measures)) {
-
-#  data_test[measure] <- paste0("data_measures$measure_all_sc_overdue_monitoring_by_", measures[measure], "_rate")
-
-#}
+# Rename all measue variables to "measures_category" so it's easier to refer
+# to the same variable in a function
+data_ttest <- data_ttest %>% 
+  purrr::map(~ .x %>% rename("measure_category" = 1))
 
 ## Before / After comparison for AGE BANDS -----
-data_test <- data_measures$measure_all_sc_overdue_monitoring_by_age_band_rate
+ttest_measures <- function(df) {
 
-data_ttest_age_band <-
-  data_test %>%
-  mutate(
-    # assign months to analysis periods
-    period = case_when(
-      date == index_baseline ~ "baseline",
-      date == index_impact ~ "impact",
-      TRUE ~ NA_character_
-    ),
-    numerator = all_sc_overdue_monitoring_num
-  ) %>%
-  # remove if date is not in comparison period
-  filter(!is.na(period)) %>%
-  # aggregate data within periods
-  group_by(measure_name, age_band, period) %>%
-  summarise(
-    population = sum(population),
-    numerator  = sum(numerator ),
-    value = numerator/population
-  ) %>%
-  pivot_wider(
-    id_cols = c("measure_name", "age_band"),
-    names_from = period,
-    values_from = c("population", "numerator", "value")
-  ) %>%
-  mutate(
-    difference = value_impact - value_baseline,
-    std.error_baseline = sqrt( (value_baseline*(1-value_baseline))/population_baseline),
-    std.error_impact = sqrt( (value_impact*(1-value_impact))/population_impact),
+  df %>%
+    mutate(
+      # assign months to analysis periods
+      period = case_when(
+        date == index_baseline ~ "baseline",
+        date == index_impact ~ "impact",
+        TRUE ~ NA_character_
+      ),
+      numerator = all_sc_overdue_monitoring_num
+    ) %>%
+    # remove if date is not in comparison period
+    filter(!is.na(period)) %>%
+    # aggregate data within periods
+    group_by(measure_name, measure_category, period) %>%
+    summarise(
+      population = sum(population),
+      numerator  = sum(numerator),
+      value = numerator / population
+    ) %>%
+    pivot_wider(
+      id_cols = c("measure_name", "measure_category"),
+      names_from = period,
+      values_from = c("population", "numerator", "value")
+    ) %>%
+    mutate(
+      difference = value_impact - value_baseline,
+      std.error_baseline = sqrt((value_baseline * (1 - value_baseline)) / population_baseline),
+      std.error_impact = sqrt((value_impact * (1 - value_impact)) / population_impact),
 
-    std.error = sqrt((std.error_baseline^2) + (std.error_impact^2)),
-    test.stat = difference/std.error,
+      std.error = sqrt((std.error_baseline^2) + (std.error_impact^2)),
+      test.stat = difference / std.error,
 
-    p.value = pchisq(test.stat^2, df=1, lower.tail=FALSE),
+      p.value = pchisq(test.stat^2, df = 1, lower.tail = FALSE),
 
-    difference.ll = difference + qnorm(0.025)*std.error,
-    difference.ul = difference + qnorm(0.975)*std.error,
-
-  )
-
-write_csv(x = data_ttest_age_band,
-          path = paste0(analysis_dir, "/subgroup_t_test.csv"),
-          append = TRUE)
+      difference.ll = difference + qnorm(0.025) * std.error,
+      difference.ul = difference + qnorm(0.975) * std.error
+      ) %>%
+      ungroup() %>%
+      mutate(measure_category = as.character(measure_category))
+}
 
 
-## Before / After comparison for ETHNICITIES -----
-data_test <- data_measures$measure_all_sc_overdue_monitoring_by_ethnicity_rate
+df_ttest_age_band <- ttest_measures(data_ttest[["measure_all_sc_overdue_monitoring_by_age_band_rate"]])
+ttest_measures(data_ttest[["measure_all_sc_overdue_monitoring_by_ethnicity_rate"]])
+ttest_measures(data_ttest[["measure_all_sc_overdue_monitoring_by_sex_rate"]])
+ttest_measures(data_ttest[["measure_all_sc_overdue_monitoring_by_learning_disability_rate"]])
+ttest_measures(data_ttest[["measure_all_sc_overdue_monitoring_by_imdQ5_rate"]])
 
-data_ttest_ethnicity <-
-  data_test %>%
-  mutate(
-    # assign months to analysis periods
-    period = case_when(
-      date == index_baseline ~ "baseline",
-      date == index_impact ~ "impact",
-      TRUE ~ NA_character_
-    ),
-    numerator = all_sc_overdue_monitoring_num
-  ) %>%
-  # remove if date is not in comparison period
-  filter(!is.na(period)) %>%
-  # aggregate data within periods
-  group_by(measure_name, ethnicity, period) %>%
-  summarise(
-    population = sum(population),
-    numerator  = sum(numerator ),
-    value = numerator/population
-  ) %>%
-  pivot_wider(
-    id_cols = c("measure_name", "ethnicity"),
-    names_from = period,
-    values_from = c("population", "numerator", "value")
-  ) %>%
-  mutate(
-    difference = value_impact - value_baseline,
-    std.error_baseline = sqrt( (value_baseline*(1-value_baseline))/population_baseline),
-    std.error_impact = sqrt( (value_impact*(1-value_impact))/population_impact),
 
-    std.error = sqrt((std.error_baseline^2) + (std.error_impact^2)),
-    test.stat = difference/std.error,
-
-    p.value = pchisq(test.stat^2, df=1, lower.tail=FALSE),
-
-    difference.ll = difference + qnorm(0.025)*std.error,
-    difference.ul = difference + qnorm(0.975)*std.error,
-
-  )
-
-write_csv(x = data_ttest_ethnicity,
-          path = paste0(analysis_dir, "/subgroup_t_test.csv"),
-          append = TRUE)
-
+data_ttest_results <- data_ttest %>% 
+  purrr::map_dfr(~ .x %>% ttest_measures())
 
 ### HETEROGENEITY TESTING FOR SUBGROUPS -----
 
 ## Test AGE group-specific differences in baseline/impact difference -----
-df_age_chi <- data_ttest_age_band %>%
-  ungroup() %>%
+data_heterogenity_results <- data_ttest_results %>%
+  group_by(measure_name) %>%
   summarise(
     # heterogeneity tests
-    cochrans_q = sum((1/(std.error^2)) * ((difference - weighted.mean(difference, 1/(std.error)^2))^2)),
+    cochrans_q = sum((1 / (std.error^2)) * ((difference - weighted.mean(difference, 1 / (std.error)^2))^2)),
     p_value = pchisq(cochrans_q, df = n() - 1, lower.tail = FALSE)
-  ) %>%
-  mutate(measure = "age_band") 
+  )
 
-write_csv(x = df_age_chi,
-          path = here(paste0(analysis_dir, "/age_band_heterogeneity.csv")))
+data_ttest_results %>%
+  left_join(data_heterogenity_results, by = "measure_name") %>%
+  write_csv(here("output/analysis/measures_subgroup_ttest_heterogeneity.csv"))
