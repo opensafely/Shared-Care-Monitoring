@@ -101,3 +101,11 @@ def plot_measures(
     plt.clf()
     
 
+
+#Define redaction function
+def redact_round_table(df):
+    """Redacts counts <= 7 and rounds counts to nearest 5"""
+    df["all_sc_overdue_monitoring_num"] = (df["all_sc_overdue_monitoring_num"]).apply(lambda x: 5 * round(x/5))
+    df["population"] = (df["population"]).apply(lambda x: 5 * round(x/5))
+    df["value"] = df["all_sc_overdue_monitoring_num"] / df["population"]
+    return df

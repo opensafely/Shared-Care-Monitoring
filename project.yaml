@@ -60,7 +60,7 @@ actions:
               
   generate_plots:
      run: python:latest python analysis/plots.py
-     needs: [generate_measures, generate_measures_levothyroxine]
+     needs: [generate_measures, generate_measures_levothyroxine, redact_counts]
      outputs:
        moderately_sensitive:
          counts: output/joined/plot_*.png
@@ -84,7 +84,7 @@ actions:
      needs: [generate_measures]
      outputs:
        moderately_sensitive:
-         measure_csv: output/redacted_*.csv
+         measure_csv: output/rounded/redacted_*.csv
 
   perform_inferential_stats:
     run: r:latest analysis/impact_comparison.R

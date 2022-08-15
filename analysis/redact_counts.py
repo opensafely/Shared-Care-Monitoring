@@ -2,16 +2,15 @@ import pandas as pd
 import numpy as np
 import json
 from utilities import *
+import pathlib
 
 
-#Define redaction function
-def redact_round_table(df_in):
-    """Redacts counts <= 7 and rounds counts to nearest 5"""
-    df_out = df_in.where(df_in > 7, np.nan).apply(lambda x: 5 * round(x/5))
-    return df_out
+measures = ["age_band", "care_home", "dementia", "ethnicity", "housebound", "imdQ5", "learning_disability", "region", "rural_urban", "serious_mental_illness", "sex"]
 
 
-measures = ["age_band", "care_home", "dementia", "ethnicity", "housebound", "imdQ5", "learning_disability", "medication" "region", "rural_urban", "serious_mental_illness", "sex"]
+#Make new directory for redacted output
+pathlib.Path(OUTPUT_DIR / "rounded").mkdir()
+
 
 for measure in measures:
     
@@ -22,21 +21,9 @@ for measure in measures:
      )
 
     #Apply redaction function
-    redact_round_table(df)
+    df_out = redact_round_table(df)
     
     #Output new dataframe with redacted values as a new table
     df_out.to_csv(
-        OUTPUT_DIR / f"redacted_{measure}.csv",
+        OUTPUT_DIR / f"rounded/redacted_{measure}.csv",
     )
-
-    
-#Load population df
-df = pd.read_csv(
-    OUTPUT_DIR / f"joined/measure_all_sc_overdue_monitoring_rate.csv",        
-    parse_dates=["date"],
-)
-          
-#Output new dataframe with redacted values as a new table
-df_out.to_csv(
-    OUTPUT_DIR / f"redacted_population.csv", index=False
-)
