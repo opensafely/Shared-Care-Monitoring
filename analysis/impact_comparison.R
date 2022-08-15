@@ -177,6 +177,8 @@ ttest_measures <- function(df) {
 data_ttest_results <- data_ttest %>% 
   purrr::map_dfr(~ .x %>% ttest_measures())
 
+#Remove Columns Showing Unredacted Patient Counts
+data_ttest_results <- subset(data_ttest_results, select = -c(population_baseline, population_impact, numerator_baseline, numerator_impact, value_baseline, value_impact))
 
 ### HETEROGENEITY TESTING FOR SUBGROUPS -----
 
