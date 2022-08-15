@@ -51,7 +51,7 @@ for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "im
     if test in ["medication"]:
         
         df = pd.read_csv(
-            OUTPUT_DIR / f"joined/measure_all_sc_monitoring_by_{test}_rate.csv",
+            OUTPUT_DIR / f"joined/measure_all_sc_overdue_monitoring_by_{test}_rate.csv",
             parse_dates=["date"],
         )
             
