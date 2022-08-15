@@ -79,6 +79,13 @@ actions:
        moderately_sensitive:
          measure_csv: output/changes_*.csv
 
+  redact_counts:
+     run: python:latest python analysis/redact_counts.py
+     needs: [generate_measures]
+     outputs:
+       moderately_sensitive:
+         measure_csv: output/redacted_*.csv
+
   perform_inferential_stats:
     run: r:latest analysis/impact_comparison.R
     needs: [generate_measures]
