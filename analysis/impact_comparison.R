@@ -178,8 +178,10 @@ data_ttest_results <- data_ttest %>%
   purrr::map_dfr(~ .x %>% ttest_measures())
 
 #Remove Columns Showing Unredacted Patient Counts
-df <- subset[df, select = -c("population_baseline", "population_impact", "numerator_baseline", "numerator_impact")]
-
+data_ttest_results$population_baseline <- NULL
+data_ttest_results$population_impact <- NULL
+data_ttest_results$numerator_baseline <- NULL
+data_ttest_results$numerator_impact<- NULL
 
 ### HETEROGENEITY TESTING FOR SUBGROUPS -----
 
