@@ -9,7 +9,7 @@ from utilities import (
     plot_measures,
 )
 
-for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "imdQ5", "learning_disability", "levothyroxine", "region", "rural_urban", "serious_mental_illness", "sex", "bp", "fbc", "lft", "u_e"]:
+for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "imdQ5", "learning_disability", "levothyroxine", "medication", "region", "rural_urban", "serious_mental_illness", "sex", "bp", "fbc", "lft", "u_e"]:
 
     if test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "imdQ5", "learning_disability", "region", "rural_urban", "serious_mental_illness", "sex"]:
 
