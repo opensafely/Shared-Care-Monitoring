@@ -117,6 +117,7 @@ measures = [
         numerator="levothyroxine_overdue_num",
         denominator="population",
         group_by="population",
+        small_number_suppression=True,
     ),
     
 ]   

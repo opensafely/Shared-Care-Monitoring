@@ -463,6 +463,7 @@ measures = [
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="population",
+        small_number_suppression=True,
     ), 
 
     
@@ -472,6 +473,7 @@ measures = [
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="medication",
+        small_number_suppression=True,
     ),  
          
     
@@ -481,6 +483,8 @@ measures = [
         numerator="fbc_overdue_num",
         denominator="population",
         group_by="population",
+        small_number_suppression=True,
+
     ),
     
     Measure(
@@ -488,6 +492,7 @@ measures = [
         numerator="lft_overdue_num",
         denominator="population",
         group_by="population",
+        small_number_suppression=True,
     ),
     
     Measure(
@@ -495,6 +500,7 @@ measures = [
         numerator="u_e_overdue_num",
         denominator="population",
         group_by="population",
+        small_number_suppression=True,
     ),
     
     Measure(
@@ -502,6 +508,7 @@ measures = [
         numerator="bp_overdue_num",
         denominator="on_leflunomide",
         group_by="population",
+        small_number_suppression=True,
     ),
     
 
@@ -511,6 +518,7 @@ measures = [
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="age_band",
+        small_number_suppression=True,
     ),
     
     Measure(
@@ -518,6 +526,7 @@ measures = [
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="sex",
+        small_number_suppression=True,
     ),
     
     Measure(
@@ -525,6 +534,7 @@ measures = [
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="region",
+        small_number_suppression=True,
     ),
     
     Measure(
@@ -539,6 +549,7 @@ measures = [
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="ethnicity",
+        small_number_suppression=True,
     ),
     
     Measure(
@@ -546,6 +557,7 @@ measures = [
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="imdQ5",
+        small_number_suppression=True,
     ),
     
     Measure(
@@ -553,6 +565,7 @@ measures = [
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="rural_urban",
+        small_number_suppression=True,
     ),
     
     Measure(
@@ -560,6 +573,7 @@ measures = [
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="care_home",
+        small_number_suppression=True,
     ),
     
     Measure(
@@ -567,6 +581,7 @@ measures = [
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="housebound",
+        small_number_suppression=True,
     ),
     
     #CLINICAL GROUP BREAKDOWN
@@ -575,6 +590,7 @@ measures = [
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="dementia",
+        small_number_suppression=True,
     ),
     
     Measure(
@@ -582,6 +598,7 @@ measures = [
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="learning_disability",
+        small_number_suppression=True,
     ),
     
     Measure(
@@ -589,5 +606,6 @@ measures = [
         numerator="all_sc_overdue_monitoring_num",
         denominator="population",
         group_by="serious_mental_illness",
+        small_number_suppression=True,
     ),  
 ]
