@@ -51,8 +51,7 @@ for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "im
     if test in ["bp", "fbc", "lft", "u_e"]:
 
         df = pd.read_csv(
-            #OUTPUT_DIR / f"joined/measure_{test}_overdue_rate.csv",
-            OUTPUT_DIR / f"rounded/redacted{test}.csv",
+            OUTPUT_DIR / f"rounded/redacted_{test}.csv",
             parse_dates=["date"],
         )
 
@@ -69,7 +68,7 @@ for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "im
     if test in ["levothyroxine"]:
 
         df = pd.read_csv(
-            OUTPUT_DIR / f"measure_{test}_overdue_rate.csv",
+            OUTPUT_DIR / f"rounded/redacted_{test}.csv",
             parse_dates=["date"],
         )
 

@@ -102,18 +102,10 @@ def plot_measures(
     
 
 
-#Define redaction function
+#Define rounding function
 def redact_round_table(df, numerator_name, denominator_name):
     """Rounds counts to nearest 5"""
-    df[numerator_name] = df[numerator_name].apply(lambda x: 5 * round(x/5))
-    df[denominator_name] = df[denominator_name].apply(lambda x: 5 * round(x/5))
+    df[numerator_name] = df[numerator_name].apply(lambda x: 5 * round(x/5) if not np.isnan(x) else x)
+    df[denominator_name] = df[denominator_name].apply(lambda x: 5 * round(x/5) if not np.isnan(x) else x)
     df["value"] = df[numerator_name] / df[denominator_name]
     return df
-
-
-#def redact_round_table(df):
-#    """Rounds counts to nearest 5"""
-#    df["all_sc_overdue_monitoring_num"] = (df["all_sc_overdue_monitoring_num"]).apply(lambda x: 5 * round(x/5))
-#    df["population"] = (df["population"]).apply(lambda x: 5 * round(x/5))
-#    df["value"] = df["all_sc_overdue_monitoring_num"] / df["population"]
-#    return df
