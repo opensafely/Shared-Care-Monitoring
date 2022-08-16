@@ -9,7 +9,7 @@ tests = ["age_band", "care_home", "dementia", "ethnicity", "housebound", "imdQ5"
 
 
 #Make new directory for redacted output
-pathlib.Path(OUTPUT_DIR / "rounded").mkdir()
+pathlib.Path(OUTPUT_DIR / "rounded").mkdir(parents=True, exist_ok=True)
 
 
 for test in tests:
