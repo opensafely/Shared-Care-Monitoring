@@ -28,6 +28,7 @@ for test in tests:
         #Output new dataframe with redacted values as a new table
         df_out.to_csv(
             OUTPUT_DIR / f"rounded/redacted_{test}.csv",
+            index=False,
         )
     
     if test in ["u_e", "fbc", "lft", "bp"]:
@@ -44,6 +45,7 @@ for test in tests:
         #Output new dataframe with redacted values as a new table
         df_out.to_csv(
             OUTPUT_DIR / f"rounded/redacted_{test}.csv",
+            index=False,
         )
          
     if test in ["levothyroxine"]:
@@ -60,4 +62,5 @@ for test in tests:
         #Output new dataframe with redacted values as a new table
         df_out.to_csv(
             OUTPUT_DIR / f"rounded/redacted_{test}.csv",
+            index=False,
         )
