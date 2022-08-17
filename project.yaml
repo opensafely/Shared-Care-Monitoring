@@ -81,7 +81,7 @@ actions:
 
   redact_counts:
      run: python:latest python analysis/redact_counts.py
-     needs: [generate_measures]
+     needs: [generate_measures, generate_measures_levothyroxine]
      outputs:
        moderately_sensitive:
          measure_csv: output/rounded/redacted_*.csv

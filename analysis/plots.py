@@ -11,7 +11,7 @@ from utilities import (
 
 for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "imdQ5", "learning_disability", "levothyroxine", "medication", "region", "rural_urban", "serious_mental_illness", "sex", "bp", "fbc", "lft", "u_e"]:
 
-    if test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "imdQ5", "learning_disability", "region", "rural_urban", "serious_mental_illness", "sex"]:
+    if test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "imdQ5", "learning_disability", "medication", "region", "rural_urban", "serious_mental_illness", "sex"]:
 
         df = pd.read_csv(
             OUTPUT_DIR / f"rounded/redacted_{test}.csv",
@@ -47,29 +47,11 @@ for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "im
             category=f"{test}",
         )
         
-    
-    if test in ["medication"]:
-        
-        df = pd.read_csv(
-            OUTPUT_DIR / f"joined/measure_all_sc_overdue_monitoring_by_{test}_rate.csv",
-            parse_dates=["date"],
-        )
-            
-        plot_measures(
-            df=df,
-            filename=f"/joined/plot_all_sc_overdue_monitoring_by_{test}",
-            column_to_plot="value",
-            title="",
-            y_label="Patients Overdue Monitoring",
-            as_bar=False,
-            category=f"{test}",
-        )
-        
         
     if test in ["bp", "fbc", "lft", "u_e"]:
 
         df = pd.read_csv(
-            OUTPUT_DIR / f"joined/measure_{test}_overdue_rate.csv",
+            OUTPUT_DIR / f"rounded/redacted_{test}.csv",
             parse_dates=["date"],
         )
 
@@ -86,7 +68,7 @@ for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "im
     if test in ["levothyroxine"]:
 
         df = pd.read_csv(
-            OUTPUT_DIR / f"measure_{test}_overdue_rate.csv",
+            OUTPUT_DIR / f"rounded/redacted_{test}.csv",
             parse_dates=["date"],
         )
 
