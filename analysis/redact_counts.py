@@ -31,7 +31,7 @@ for test in tests:
             index=False,
         )
     
-    if test in ["u_e", "fbc", "lft", "bp"]:
+    if test in ["u_e", "fbc", "lft"]:
 
         #Load a df
         df = pd.read_csv(
@@ -41,6 +41,23 @@ for test in tests:
         
         #Apply redaction function
         df_out = redact_round_table(df, f"{test}_overdue_num", "population")
+
+        #Output new dataframe with redacted values as a new table
+        df_out.to_csv(
+            OUTPUT_DIR / f"rounded/redacted_{test}.csv",
+            index=False,
+        )
+        
+    if test in ["bp"]:
+
+        #Load a df
+        df = pd.read_csv(
+            OUTPUT_DIR / f"joined/measure_{test}_overdue_rate.csv",
+            parse_dates=["date"],
+        )
+        
+        #Apply redaction function including redaction for patients 'on leflunomide'
+        df_out = redact_round_table(df, f"{test}_overdue_num", "on_leflunomide", "population")
 
         #Output new dataframe with redacted values as a new table
         df_out.to_csv(

@@ -103,9 +103,11 @@ def plot_measures(
 
 
 #Define redaction function
-def redact_round_table(df, numerator_name, denominator_name):
+def redact_round_table(df, numerator_name, denominator_name, extra_groupby=None):
     """Redacts counts <=7, and rounds counts to nearest 5"""
     df[numerator_name] = df[numerator_name].apply(lambda x: np.nan if x <= 7 else x).apply(lambda x: 5 * round(x/5) if not np.isnan(x) else x)
     df[denominator_name] = df[denominator_name].apply(lambda x: np.nan if x <= 7 else x).apply(lambda x: 5 * round(x/5) if not np.isnan(x) else x)
+    if extra_groupby:
+        df[extra_groupby] = df[extra_groupby].apply(lambda x: np.nan if x <= 7 else x).apply(lambda x: 5 * round(x/5) if not np.isnan(x) else x)
     df["value"] = df[numerator_name] / df[denominator_name]
     return df
