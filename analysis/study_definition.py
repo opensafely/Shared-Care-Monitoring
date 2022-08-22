@@ -447,7 +447,7 @@ study = StudyDefinition(
     # No Blood Pressure Test within 3 months - only relevant to Leflunomide
     bp_overdue_num=patients.satisfying(
         """
-        leflunomide_3months AND
+        on_leflunomide AND
         NOT blood_pressure_test_3months
         """,
     ),

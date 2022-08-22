@@ -174,7 +174,8 @@ ttest_measures <- function(df) {
       difference.ul = difference + qnorm(0.975) * std.error
       ) %>%
       ungroup() %>%
-      mutate(measure_category = as.character(measure_category))
+      mutate(measure_category = as.character(measure_category)) %>%
+      mutate_if(is_numeric, round, digits=3)
 }
 
 ## Apply t-test function to every element in the list and return ONE dataframe ----
@@ -194,7 +195,8 @@ data_heterogenity_results <- data_ttest_results %>%
   summarise(
     cochrans_q = sum((1 / (std.error^2)) * ((difference - weighted.mean(difference, 1 / (std.error)^2))^2)),
     p_value = pchisq(cochrans_q, df = n() - 1, lower.tail = FALSE)
-  )
+  ) %>%
+  mutate_if(is_numeric, round, digits=3)
 
 ## Output Results ----
 data_ttest_results %>%
