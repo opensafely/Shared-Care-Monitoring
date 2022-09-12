@@ -74,7 +74,7 @@ actions:
               
   generate_plots:
      run: python:latest python analysis/plots.py
-     needs: [generate_measures, generate_measures_levothyroxine, redact_counts]
+     needs: [generate_measures, generate_measures_levothyroxine, redact_counts, build_test_type_measure]
      outputs:
        moderately_sensitive:
          counts: output/joined/plot_*.png
