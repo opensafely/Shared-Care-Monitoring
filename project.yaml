@@ -57,6 +57,20 @@ actions:
      outputs:
        moderately_sensitive:
          deciles_charts: output/deciles_*_by_practice_rate.*
+         
+  redact_counts:
+     run: python:latest python analysis/redact_counts.py
+     needs: [generate_measures, generate_measures_levothyroxine]
+     outputs:
+       moderately_sensitive:
+         measure_csv: output/rounded/redacted_*.csv
+        
+  build_test_type_measure:
+     run: python:latest python analysis/build_test_type_measure.py
+     needs: [generate_measures, generate_measures_levothyroxine, redact_counts]
+     outputs:
+       moderately_sensitive:
+         counts: output/rounded/redacted_test_type.csv
               
   generate_plots:
      run: python:latest python analysis/plots.py
@@ -78,13 +92,6 @@ actions:
      outputs:
        moderately_sensitive:
          measure_csv: output/changes_*.csv
-
-  redact_counts:
-     run: python:latest python analysis/redact_counts.py
-     needs: [generate_measures, generate_measures_levothyroxine]
-     outputs:
-       moderately_sensitive:
-         measure_csv: output/rounded/redacted_*.csv
 
   perform_inferential_stats:
     run: r:latest analysis/impact_comparison.R

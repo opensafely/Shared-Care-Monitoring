@@ -11,7 +11,7 @@ for measure in measures:
     
     #Load a df
     df = pd.read_csv(
-        OUTPUT_DIR / f"joined/measure_{measure}_overdue_rate.csv",
+        OUTPUT_DIR / f"rounded/redacted_{measure}.csv",
         
         parse_dates=["date"],
      )
@@ -27,5 +27,5 @@ joined_data = pd.concat(data)
 
 #Output joined data                   
 joined_data.to_csv(
-        OUTPUT_DIR / f"redacted_test_type.csv",
+        OUTPUT_DIR / f"rounded/redacted_test_type.csv",
     )
