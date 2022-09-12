@@ -5,6 +5,8 @@ from utilities import *
 
 measures = ["bp", "fbc", "lft", "u_e"]
 
+data = []
+    
 for measure in measures:
     
     #Load a df
@@ -14,14 +16,16 @@ for measure in measures:
         parse_dates=["date"],
      )
 
-
-    #Identify monitoring rate in Feb20 and May20, for all categories within each measure 
-    data = df.loc[(df[measure, "value"].set_index(measure)
+    #Create column for 'test_type', and assign the name of the relevant test type as data within each of its rows
+    df["test_type"] = measure
     
-    #Create new dataframe which contains extracted values
-    df = pd.DataFrame(data.index.values)
+    #Append data frame to list of data
+    data.append(df)
 
-    #Output new dataframe with calculated values as a new table, appending as appropriate?
-    df.to_csv(
-        OUTPUT_DIR / f"changes_test_type.csv",
+#Merge data frames from data list
+joined_data = pd.concat(data)
+
+#Output joined data                   
+joined_data.to_csv(
+        OUTPUT_DIR / f"redacted_test_type.csv",
     )
