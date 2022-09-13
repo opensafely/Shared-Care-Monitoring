@@ -9,9 +9,9 @@ from utilities import (
     plot_measures,
 )
 
-for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "imdQ5", "learning_disability", "levothyroxine", "medication", "region", "rural_urban", "serious_mental_illness", "sex", "bp", "fbc", "lft", "u_e"]:
+for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "imdQ5", "learning_disability", "levothyroxine", "medication", "region", "rural_urban", "serious_mental_illness", "sex", "test_type"]:
 
-    if test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "imdQ5", "learning_disability", "medication", "region", "rural_urban", "serious_mental_illness", "sex"]:
+    if test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "imdQ5", "learning_disability", "medication", "region", "rural_urban", "serious_mental_illness", "sex", "test_type"]:
 
         df = pd.read_csv(
             OUTPUT_DIR / f"rounded/redacted_{test}.csv",
@@ -45,23 +45,6 @@ for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "im
             y_label="Patients Overdue Monitoring",
             as_bar=False,
             category=f"{test}",
-        )
-        
-        
-    if test in ["bp", "fbc", "lft", "u_e"]:
-
-        df = pd.read_csv(
-            OUTPUT_DIR / f"rounded/redacted_{test}.csv",
-            parse_dates=["date"],
-        )
-
-        plot_measures(
-            df=df,
-            filename=f"/joined/plot_{test}_overdue_rate",
-            column_to_plot="value",
-            title="",
-            y_label="Patients Overdue Monitoring",
-            as_bar=False,
         )
         
         
