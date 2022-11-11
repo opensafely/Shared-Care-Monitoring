@@ -7,6 +7,7 @@ from utilities import (
     OUTPUT_DIR,
     ANALYSIS_DIR,
     plot_measures,
+    plot_levo,
 )
 
 for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "imdQ5", "learning_disability", "levothyroxine", "medication", "region", "rural_urban", "serious_mental_illness", "sex", "test_type"]:
@@ -58,7 +59,7 @@ for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "im
             parse_dates=["date"],
         )
 
-        plot_measures(
+        plot_levo(
             df=df,
             filename=f"/joined/plot_{test}_overdue_rate",
             column_to_plot="value",
