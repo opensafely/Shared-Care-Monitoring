@@ -7,6 +7,7 @@ from utilities import (
     OUTPUT_DIR,
     ANALYSIS_DIR,
     plot_measures,
+    plot_levo,
 )
 
 for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "imdQ5", "learning_disability", "levothyroxine", "medication", "region", "rural_urban", "serious_mental_illness", "sex", "test_type"]:
@@ -36,6 +37,9 @@ for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "im
         if test in ["serious_mental_illness"]:
             df["serious_mental_illness"].replace({0: "No Serious Mental Illness", 1: "Has Serious Mental Illness"}, inplace=True)
             
+        if test in ["rural_urban"]:
+            df["rural_urban"].replace({-1: "Missing", 1: "1 - Most Rural", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8 - Most Urban"}, inplace=True)
+            
             
         plot_measures(
             df=df,
@@ -55,7 +59,7 @@ for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "im
             parse_dates=["date"],
         )
 
-        plot_measures(
+        plot_levo(
             df=df,
             filename=f"/joined/plot_{test}_overdue_rate",
             column_to_plot="value",
