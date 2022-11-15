@@ -38,7 +38,10 @@ for test in ["age_band", "care_home", "dementia", "ethnicity", "housebound", "im
             df["serious_mental_illness"].replace({0: "No Serious Mental Illness", 1: "Has Serious Mental Illness"}, inplace=True)
             
         if test in ["rural_urban"]:
-            df["rural_urban"].replace({-1: "Missing", 1: "1 - Most Rural", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8 - Most Urban"}, inplace=True)
+            df["rural_urban"].replace({-1: "Missing", 1: "1 - Urban major conurbation", 2: "2 - Urban minor conurbation", 3: "3 - Urban city and town", 4: "4 - Urban city and town in sparse setting", 5: "5 - Rural town and fringe", 6: "6 - Rural town and fringe in sparse setting", 7: "7 - Rural village and dispersed", 8: "8 - Rural village and dispersed in sparse setting"}, inplace=True)
+            
+        if test in ["test_type"]:
+            df["test_type"].replace({"bp": "Blood Pressure", "fbc": "Full Blood Count", "lft": "Liver Function Test", "u_e": "Urea & Electrolytes"}, inplace=True)
             
             
         plot_measures(
