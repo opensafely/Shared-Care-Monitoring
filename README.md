@@ -4,7 +4,7 @@
 
 Details of the purpose and any published outputs from this project can be found at the link above.
 
-An paper titled "_OpenSAFELY: The impact of COVID-19 on azathioprine, leflunomide, and methotrexate monitoring, and factors associated with change in monitoring rate._" is is being finalised, and is expected to be available on preprint servers soon.
+An paper is being finalised titled "_OpenSAFELY: The impact of COVID-19 on azathioprine, leflunomide, and methotrexate monitoring, and factors associated with change in monitoring rate._", and is expected to be available on preprint servers soon.
 
 The contents of this repository MUST NOT be considered an accurate or valid representation of the study or its purpose. 
 This repository may reflect an incomplete or incorrect analysis with no further ongoing work.
