@@ -1,8 +1,10 @@
-# Shared-Care-Monitoring
+# DMARD-Monitoring
 
 [View on OpenSAFELY](https://jobs.opensafely.org/repo/https%253A%252F%252Fgithub.com%252Fopensafely%252FShared-Care-Monitoring)
 
 Details of the purpose and any published outputs from this project can be found at the link above.
+
+[View the preprint](https://www.medrxiv.org/content/10.1101/2023.06.06.23290826v2)
 
 The contents of this repository MUST NOT be considered an accurate or valid representation of the study or its purpose. 
 This repository may reflect an incomplete or incorrect analysis with no further ongoing work.
